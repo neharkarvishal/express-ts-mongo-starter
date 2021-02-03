@@ -11,16 +11,18 @@ class UsersModule implements Module {
     router = Router()
 
     protected constructor(readonly controller: UsersController) {
-        this.initializeRoutes()
+        this.initializeRouter()
     }
 
     static create(controller: UsersController) {
         return new UsersModule(controller)
     }
 
-    private initializeRoutes() {
+    private initializeRouter() {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.router.get(`${this.path}`, this.controller.getUsers)
 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.router.get(`${this.path}/:id`, this.controller.getUserById)
 
         this.router.post(
@@ -35,6 +37,7 @@ class UsersModule implements Module {
             this.controller.updateUser,
         )
 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.router.delete(`${this.path}/:id`, this.controller.deleteUser)
     }
 }

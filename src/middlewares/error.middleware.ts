@@ -3,6 +3,20 @@ import { NextFunction, Request, Response } from 'express'
 import HttpException from '../exceptions/HttpException'
 import { logger } from '../utils/logger'
 
+// error handler
+const bodyParserErrorTypes = [
+    'encoding.unsupported',
+    'request.aborted',
+    'entity.too.large',
+    'request.size.invalid',
+    'stream.encoding.set',
+    'parameters.too.many',
+    'charset.unsupported',
+    'encoding.unsupported',
+    'entity.verify.failed',
+    'entity.parse.failed',
+]
+
 const errorMiddleware = (
     error: HttpException,
     req: Request,
@@ -10,11 +24,32 @@ const errorMiddleware = (
     next: NextFunction,
 ) => {
     try {
-        const status: number = error.status || 500
-        const message: string = error.message || 'Something went wrong'
+        const { status = 500, message, stack, errors = {} } = error
 
-        logger.error(`StatusCode : ${status}, Message : ${message}`)
-        res.status(status).json({ message })
+        logger.error(
+            `StatusCode : ${status}, Message : ${message} \n${
+                stack ?? 'NO STACKTRACE'
+            }`,
+        )
+
+        const response = {
+            status,
+            message,
+        }
+
+        if (process.env.NODE_ENV !== 'development') {
+            response.message = // @ts-ignore Check error related for request body
+                bodyParserErrorTypes.indexOf(error?.type) === -1
+                    ? 'Something went wrong'
+                    : 'Something wrong in request'
+        } else {
+            // @ts-ignore only providing error in development
+            response.stack = stack // @ts-ignore
+            response.message = message // @ts-ignore
+            if (Object.keys(errors).length) response.errors = errors
+        }
+
+        res.status(status).json(response)
     } catch (e) {
         return next(e)
     }

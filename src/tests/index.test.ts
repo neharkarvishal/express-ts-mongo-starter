@@ -13,7 +13,9 @@ describe('Testing Index', () => {
             const indexRoute = IndexModule.create()
             const app = App.of([indexRoute])
 
-            return request(app.getServer()).get(`${indexRoute.path}`).expect(200)
+            return request(app.getExpressApp())
+                .get(`${indexRoute.path}`)
+                .expect(200)
         })
     })
 })

@@ -20,7 +20,7 @@ const validationMiddleware = (
                             Object.values(error.constraints),
                         )
                         .join(', ')
-                    next(new HttpException(400, message))
+                    next(new HttpException({ message, status: 400 }))
                 } else {
                     return next()
                 }

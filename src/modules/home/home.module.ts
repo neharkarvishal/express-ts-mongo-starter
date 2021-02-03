@@ -9,14 +9,14 @@ class HomeModule implements Module {
     router = Router()
 
     private constructor(readonly controller: HomeController) {
-        this.initializeRoutes()
+        this.initializeRouter()
     }
 
     static create(controller: HomeController) {
         return new HomeModule(controller)
     }
 
-    private initializeRoutes() {
+    private initializeRouter() {
         this.router.get(`${this.path}`, this.controller.index)
     }
 }

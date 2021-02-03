@@ -33,7 +33,7 @@ describe('Testing AuthController', () => {
             mongoose.connect = jest.fn()
             const app = App.of([authRoute])
 
-            return request(app.getServer()).post('/signup').send(userData)
+            return request(app.getExpressApp()).post('/signup').send(userData)
         })
     })
 
@@ -60,7 +60,7 @@ describe('Testing AuthController', () => {
             mongoose.connect = jest.fn()
             const app = App.of([authRoute])
 
-            return request(app.getServer())
+            return request(app.getExpressApp())
                 .post('/login')
                 .send(userData)
                 .expect('Set-Cookie', /^Authorization=.+/)
@@ -73,7 +73,7 @@ describe('Testing AuthController', () => {
 
             const app = App.of([authRoute])
 
-            return request(app.getServer())
+            return request(app.getExpressApp())
                 .post('/logout')
                 .expect('Set-Cookie', /^Authorization=;/)
         })

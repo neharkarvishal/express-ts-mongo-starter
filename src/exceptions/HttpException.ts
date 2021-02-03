@@ -1,12 +1,18 @@
+interface HttpExceptionParams {
+    message: string
+    status?: number
+    errors?: Record<string, unknown>
+}
+
 class HttpException extends Error {
+    errors: Record<string, unknown>
+
     status: number
 
-    message: string
-
-    constructor(status: number, message: string) {
+    constructor({ message, status = 500, errors = {} }: HttpExceptionParams) {
         super(message)
         this.status = status
-        this.message = message
+        this.errors = errors
     }
 }
 

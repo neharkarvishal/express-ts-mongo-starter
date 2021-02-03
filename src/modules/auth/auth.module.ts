@@ -10,14 +10,14 @@ class AuthModule implements Module {
     router = Router()
 
     protected constructor(readonly controller: AuthController) {
-        this.initializeRoutes()
+        this.initializeRouter()
     }
 
     static create(controller: AuthController) {
         return new AuthModule(controller)
     }
 
-    private initializeRoutes() {
+    private initializeRouter() {
         this.router.post(
             '/signup',
             validationMiddleware(CreateUserDto, 'body'),

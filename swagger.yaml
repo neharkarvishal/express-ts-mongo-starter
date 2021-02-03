@@ -102,7 +102,7 @@ paths:
 
 # definitions
 definitions:
-  users:
+  Users:
     type: object
     required:
         - email

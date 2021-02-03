@@ -27,7 +27,9 @@ describe('Testing Users', () => {
             mongoose.connect = jest.fn()
             const app = App.of([usersRoute])
 
-            return request(app.getServer()).get(`${usersRoute.path}`).expect(200)
+            return request(app.getExpressApp())
+                .get(`${usersRoute.path}`)
+                .expect(200)
         })
     })
 })

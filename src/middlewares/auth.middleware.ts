@@ -31,12 +31,27 @@ const authMiddleware = async (
                 return next()
             }
 
-            return next(new HttpException(401, 'Wrong authentication token'))
+            return next(
+                new HttpException({
+                    message: 'Wrong authentication token',
+                    status: 401,
+                }),
+            )
         }
 
-        return next(new HttpException(404, 'Authentication token missing'))
+        return next(
+            new HttpException({
+                message: 'Authentication token missing',
+                status: 404,
+            }),
+        )
     } catch (error) {
-        return next(new HttpException(401, 'Wrong authentication token'))
+        return next(
+            new HttpException({
+                message: 'Wrong authentication token',
+                status: 401,
+            }),
+        )
     }
 }
 
