@@ -1,10 +1,10 @@
 import { Router } from 'express'
 
-interface Module {
-    path?: string
+interface Controller {
+    path: string
     router: Router
 
     getRouter: () => Router
 }
 
-export default Module
+export default Controller

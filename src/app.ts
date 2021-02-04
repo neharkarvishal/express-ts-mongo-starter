@@ -11,7 +11,7 @@ import swaggerUi from 'swagger-ui-express'
 
 import { dbConnection } from './database'
 import HttpException from './exceptions/HttpException'
-import Module from './interfaces/module.interface'
+import Controller from './interfaces/controller.interface'
 import errorMiddleware from './middlewares/error.middleware'
 import { logger, stream } from './utils/logger'
 
@@ -26,7 +26,7 @@ class App {
         return new App(app)
     }
 
-    with(modules: Module[]) {
+    with(modules: Controller[]) {
         this.initializeRouter(modules)
         this.initializeErrorHandling()
         return this
@@ -48,15 +48,31 @@ class App {
             set('debug', true)
         }
 
+        const TAGS = ['MONGO_STATUS']
+
         connect(dbConnection.url, dbConnection.options)
-            .then(() => {
-                logger.info('🟢 The database is connected.')
+            .then((m) => {
+                m.connection.on('error', (err) => {
+                    logger.error(err, { tags: TAGS })
+                })
+
+                m.connection.on('reconnected', () => {
+                    logger.info('mongodb reconnected', { tags: TAGS })
+                })
+
+                m.connection.on('disconnected', () => {
+                    logger.warn('mongodb disconnected', { tags: TAGS })
+                })
+
+                m.connection.once('open', () => {
+                    logger.info('mongodb connection established', { tags: TAGS })
+                })
+
+                logger.info('The database is connected.')
             })
             .catch((error: Error) => {
                 logger.error(
-                    `🔴 Unable to connect to the database: ${JSON.stringify(
-                        error,
-                    )}.`,
+                    `Unable to connect to the database: ${JSON.stringify(error)}.`,
                 )
             })
     }
@@ -78,7 +94,7 @@ class App {
         this.app.use(express.urlencoded({ extended: false }))
     }
 
-    private initializeRouter(modules: Module[]) {
+    private initializeRouter(modules: Controller[]) {
         modules.forEach((module) => {
             this.app.use('/', module.router)
         })

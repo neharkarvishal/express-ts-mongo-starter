@@ -1,16 +1,45 @@
-/* eslint-disable consistent-return */
-import { NextFunction, Request, Response } from 'express'
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { NextFunction, Request, Response, Router } from 'express'
 
+import Controller from '../../interfaces/controller.interface'
+import authMiddleware from '../../middlewares/auth.middleware'
+import validationMiddleware from '../../middlewares/validation.middleware'
 import { CreateUserDto } from '../users/users.dto'
 import { User } from '../users/users.interface'
 import { RequestWithUser } from './auth.interface'
 import AuthService from './auth.service'
 
-class AuthController {
-    protected constructor(readonly service: AuthService) {}
+class AuthController implements Controller {
+    path = '/auth'
+
+    router = Router()
+
+    protected constructor(readonly service: AuthService) {
+        this.initializeRouter()
+    }
 
     static create(service: AuthService) {
         return new AuthController(service)
+    }
+
+    private initializeRouter() {
+        this.router.post(
+            '/signup',
+            validationMiddleware(CreateUserDto, 'body'),
+            this.signUp,
+        )
+
+        this.router.post(
+            '/login',
+            validationMiddleware(CreateUserDto, 'body'),
+            this.logIn,
+        )
+
+        this.router.post('/logout', authMiddleware, this.logOut)
+    }
+
+    getRouter() {
+        return this.router
     }
 
     signUp = async (req: Request, res: Response, next: NextFunction) => {

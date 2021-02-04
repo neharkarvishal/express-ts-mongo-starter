@@ -1,7 +1,8 @@
+import express from 'express'
 import request from 'supertest'
 
 import App from '../app'
-import IndexModule from '../modules/home/home.module'
+import HomeController from '../modules/home/home.controller'
 
 afterAll(async () => {
     await new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
@@ -10,12 +11,10 @@ afterAll(async () => {
 describe('Testing Index', () => {
     describe('[GET] /', () => {
         it('response statusCode 200', () => {
-            const indexRoute = IndexModule.create()
-            const app = App.of([indexRoute])
+            const homeRoute = HomeController.create()
+            const app = App.of(express()).with([homeRoute])
 
-            return request(app.getExpressApp())
-                .get(`${indexRoute.path}`)
-                .expect(200)
+            return request(app.getExpressApp()).get(`${homeRoute.path}`).expect(200)
         })
     })
 })

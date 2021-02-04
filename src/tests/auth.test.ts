@@ -5,9 +5,11 @@ import request from 'supertest'
 import App from '../app'
 import HttpException from '../exceptions/HttpException'
 import { TokenData } from '../modules/auth/auth.interface'
-import AuthModule from '../modules/auth/auth.module'
+import AuthModule from '../modules/auth'
 import AuthService from '../modules/auth/auth.service'
 import { CreateUserDto } from '../modules/users/users.dto'
+import express from 'express'
+import UserModel from '../modules/users/users.model'
 
 afterAll(async () => {
     await new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
@@ -20,18 +22,19 @@ describe('Testing AuthController', () => {
                 email: 'test@email.com',
                 password: 'q1w2e3r4!',
             }
-            const authRoute = AuthModule.create()
 
-            authRoute.authController.authService.users.findOne = jest
+            const authController = AuthModule
+
+            authController.service.model.findOne = jest
                 .fn()
                 .mockReturnValue(Promise.resolve(undefined))
 
-            authRoute.authController.authService.users.create = jest
+            authController.service.model.create = jest
                 .fn()
                 .mockReturnValue({ _id: 0, ...userData })
 
             mongoose.connect = jest.fn()
-            const app = App.of([authRoute])
+            const app = App.of(express()).with([authController])
 
             return request(app.getExpressApp()).post('/signup').send(userData)
         })
@@ -45,20 +48,18 @@ describe('Testing AuthController', () => {
             }
             process.env.JWT_SECRET = 'jwt_secret'
 
-            const authRoute = AuthModule.create()
+            const authController = AuthModule
 
-            authRoute.authController.authService.users.findOne = jest
-                .fn()
-                .mockReturnValue(
-                    Promise.resolve({
-                        _id: 0,
-                        email: 'test@email.com',
-                        password: await bcrypt.hash(userData.password, 10),
-                    }),
-                )
+            authController.service.model.findOne = jest.fn().mockReturnValue(
+                Promise.resolve({
+                    _id: 0,
+                    email: 'test@email.com',
+                    password: await bcrypt.hash(userData.password, 10),
+                }),
+            )
 
             mongoose.connect = jest.fn()
-            const app = App.of([authRoute])
+            const app = App.of(express()).with([authController])
 
             return request(app.getExpressApp())
                 .post('/login')
@@ -69,9 +70,9 @@ describe('Testing AuthController', () => {
 
     describe('POST /logout', () => {
         it('logout Set-Cookie Authorization=; Max-age=0', () => {
-            const authRoute = AuthModule.create()
+            const authController = AuthModule
 
-            const app = App.of([authRoute])
+            const app = App.of(express()).with([authController])
 
             return request(app.getExpressApp())
                 .post('/logout')
@@ -87,7 +88,7 @@ describe('Testing AuthService', () => {
                 token: '',
                 expiresIn: 1,
             }
-            const authService = new AuthService()
+            const authService = AuthService.create(UserModel)
 
             expect(typeof authService.createCookie(tokenData)).toEqual('string')
         })
@@ -100,17 +101,15 @@ describe('Testing AuthService', () => {
                     email: 'test@email.com',
                     password: 'q1w2e3r4!',
                 }
-                const authService = new AuthService()
 
-                authService.users.findOne = jest
+                const authService = AuthService.create(UserModel)
+
+                authService.model.findOne = jest
                     .fn()
                     .mockReturnValue(Promise.resolve(userData))
 
                 await expect(authService.signup(userData)).rejects.toMatchObject(
-                    new HttpException(
-                        400,
-                        `User with email ${userData.email} already exists`,
-                    ),
+                    new HttpException({ message: '' }),
                 )
             })
         })
@@ -122,14 +121,12 @@ describe('Testing AuthService', () => {
                     password: 'q1w2e3r4!',
                 }
                 process.env.JWT_SECRET = 'jwt_secret'
-
-                const authService = new AuthService()
-
-                authService.users.findOne = jest
+                const authService = AuthService.create(UserModel)
+                authService.model.findOne = jest
                     .fn()
                     .mockReturnValue(Promise.resolve(undefined))
 
-                authService.users.create = jest
+                authService.model.create = jest
                     .fn()
                     .mockReturnValue({ _id: 0, ...userData })
 

@@ -26,6 +26,7 @@ const authMiddleware = async (
             const findUser = await UserModel.findById(userId)
 
             if (findUser) {
+                // @ts-ignore
                 req.user = findUser
 
                 return next()

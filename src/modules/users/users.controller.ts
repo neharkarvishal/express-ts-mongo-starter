@@ -1,15 +1,47 @@
-/* eslint-disable consistent-return */
-import { NextFunction, Request, Response } from 'express'
+/* eslint-disable consistent-return,@typescript-eslint/no-misused-promises */
+import { NextFunction, Request, Response, Router } from 'express'
 
+import Controller from '../../interfaces/controller.interface'
+import validationMiddleware from '../../middlewares/validation.middleware'
 import { CreateUserDto } from './users.dto'
 import { User } from './users.interface'
 import UserService from './users.service'
 
-class UsersController {
-    protected constructor(readonly service: UserService) {}
+export default class UsersController implements Controller {
+    path = '/users'
+
+    router = Router()
+
+    protected constructor(readonly service: UserService) {
+        this.initializeRouter()
+    }
 
     static create(service: UserService) {
         return new UsersController(service)
+    }
+
+    private initializeRouter() {
+        this.router.get(`${this.path}`, this.getUsers)
+
+        this.router.get(`${this.path}/:id`, this.getUserById)
+
+        this.router.post(
+            `${this.path}`,
+            validationMiddleware(CreateUserDto, 'body'),
+            this.createUser,
+        )
+
+        this.router.put(
+            `${this.path}/:id`,
+            validationMiddleware(CreateUserDto, 'body', true),
+            this.updateUser,
+        )
+
+        this.router.delete(`${this.path}/:id`, this.deleteUser)
+    }
+
+    getRouter() {
+        return this.router
     }
 
     getUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -71,5 +103,3 @@ class UsersController {
         }
     }
 }
-
-export default UsersController
