@@ -12,7 +12,7 @@ class UsersController {
         return new UsersController(service)
     }
 
-    async getUsers(req: Request, res: Response, next: NextFunction) {
+    getUsers = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const findAllUsersData: User[] = await this.service.findAllUser()
 
@@ -22,10 +22,9 @@ class UsersController {
         }
     }
 
-    async getUserById(req: Request, res: Response, next: NextFunction) {
-        const userId: string = req.params.id
-
+    getUserById = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const userId: string = req.params.id
             const findOneUserData: User = await this.service.findUserById(userId)
 
             res.status(200).json({ data: findOneUserData, message: 'findOne' })
@@ -34,10 +33,9 @@ class UsersController {
         }
     }
 
-    async createUser(req: Request, res: Response, next: NextFunction) {
-        const userData: CreateUserDto = req.body
-
+    createUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const userData: CreateUserDto = req.body
             const createUserData: User = await this.service.createUser(userData)
 
             res.status(201).json({ data: createUserData, message: 'created' })
@@ -46,11 +44,11 @@ class UsersController {
         }
     }
 
-    async updateUser(req: Request, res: Response, next: NextFunction) {
-        const userId: string = req.params.id
-        const userData: User = req.body
-
+    updateUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const userId: string = req.params.id
+            const userData: User = req.body
+
             const updateUserData: User = await this.service.updateUser(
                 userId,
                 userData,
@@ -62,10 +60,9 @@ class UsersController {
         }
     }
 
-    async deleteUser(req: Request, res: Response, next: NextFunction) {
-        const userId: string = req.params.id
-
+    deleteUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const userId: string = req.params.id
             const deleteUserData: User = await this.service.deleteUserData(userId)
 
             res.status(200).json({ data: deleteUserData, message: 'deleted' })

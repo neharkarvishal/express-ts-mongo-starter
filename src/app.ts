@@ -15,8 +15,6 @@ import Module from './interfaces/module.interface'
 import errorMiddleware from './middlewares/error.middleware'
 import { logger, stream } from './utils/logger'
 
-require('express-async-errors')
-
 class App {
     constructor(readonly app: express.Application) {
         this.connectToDatabase()

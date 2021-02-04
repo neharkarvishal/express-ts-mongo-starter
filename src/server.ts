@@ -1,6 +1,4 @@
-import './miscSetup'
-
-import 'dotenv/config'
+import './config/env'
 
 import express from 'express'
 import * as http from 'http'
@@ -10,11 +8,6 @@ import Auth from './modules/auth'
 import Home from './modules/home'
 import Users from './modules/users'
 import { logger } from './utils/logger'
-import validateEnv from './utils/validateEnv'
-
-require('express-async-errors')
-
-validateEnv()
 
 const appModule = App.of(express()).with([Home, Users, Auth])
 

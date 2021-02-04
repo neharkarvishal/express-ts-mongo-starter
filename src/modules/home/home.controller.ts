@@ -6,7 +6,7 @@ class HomeController {
         return new HomeController()
     }
 
-    index(req: Request, res: Response, next: NextFunction) {
+    index = (req: Request, res: Response, next: NextFunction) => {
         try {
             res.sendStatus(200)
         } catch (error) {

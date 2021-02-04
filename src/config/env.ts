@@ -1,4 +1,9 @@
+import 'dotenv/config'
+import './miscSetup'
+
 import { cleanEnv, port, str } from 'envalid'
+
+require('express-async-errors')
 
 const validateEnv = () => {
     cleanEnv(process.env, {
@@ -11,4 +16,4 @@ const validateEnv = () => {
     })
 }
 
-export default validateEnv
+validateEnv()

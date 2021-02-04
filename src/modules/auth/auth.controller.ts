@@ -13,7 +13,7 @@ class AuthController {
         return new AuthController(service)
     }
 
-    async signUp(req: Request, res: Response, next: NextFunction) {
+    signUp = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: CreateUserDto = req.body
             const signUpUserData: User = await this.service.signup(userData)
@@ -24,7 +24,7 @@ class AuthController {
         }
     }
 
-    async logIn(req: Request, res: Response, next: NextFunction) {
+    logIn = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: CreateUserDto = req.body
             const { cookie, findUser } = await this.service.login(userData)
@@ -36,7 +36,7 @@ class AuthController {
         }
     }
 
-    async logOut(req: RequestWithUser, res: Response, next: NextFunction) {
+    logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
             res.setHeader('Set-Cookie', ['Authorization=; Max-age=0'])
             res.status(200).json({ message: 'logout' })
