@@ -18,22 +18,25 @@ class UserService {
     }
 
     async findUserById(userId: string) {
-        const findUser = await this.model.findOne({ _id: userId })
-        if (!findUser) throw new HttpException(409, "You're not user")
+        const user = await this.model.findOne({ _id: userId })
 
-        return findUser
+        if (!user)
+            throw new HttpException({ message: 'User not found', status: 409 })
+
+        return user
     }
 
     async createUser(userData: CreateUserDto) {
-        if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
+        if (isEmpty(userData))
+            throw new HttpException({ status: 400, message: 'Invalid user data' })
 
         const findUser = await this.model.findOne({ email: userData.email })
 
         if (findUser)
-            throw new HttpException(
-                409,
-                `You're email ${userData.email} already exists`,
-            )
+            throw new HttpException({
+                status: 409,
+                message: `Email ${userData.email} already exists`,
+            })
 
         const hashedPassword = await bcrypt.hash(userData.password, 10)
 
@@ -44,7 +47,8 @@ class UserService {
     }
 
     async updateUser(userId: string, userData: User) {
-        if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
+        if (isEmpty(userData))
+            throw new HttpException({ status: 400, message: 'Invalid user data' })
 
         const hashedPassword = await bcrypt.hash(userData.password, 10)
         const updateUserById = await this.model.findByIdAndUpdate(userId, {
@@ -52,14 +56,17 @@ class UserService {
             password: hashedPassword,
         })
 
-        if (!updateUserById) throw new HttpException(409, "You're not user")
+        if (!updateUserById)
+            throw new HttpException({ status: 409, message: 'Invalid user data' })
 
         return updateUserById
     }
 
     async deleteUserData(userId: string) {
         const deleteUserById = await this.model.findByIdAndDelete(userId)
-        if (!deleteUserById) throw new HttpException(409, "You're not user")
+
+        if (!deleteUserById)
+            throw new HttpException({ status: 409, message: 'Invalid user data' })
 
         return deleteUserById
     }

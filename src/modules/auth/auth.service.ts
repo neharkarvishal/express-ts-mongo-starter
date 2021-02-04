@@ -16,15 +16,16 @@ class AuthService {
     }
 
     async signup(userData: CreateUserDto) {
-        if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
+        if (isEmpty(userData))
+            throw new HttpException({ status: 400, message: 'Invalid user data' })
 
         const findUser = await this.model.findOne({ email: userData.email })
 
         if (findUser)
-            throw new HttpException(
-                409,
-                `You're email ${userData.email} already exists`,
-            )
+            throw new HttpException({
+                status: 409,
+                message: `Email ${userData.email} already exists`,
+            })
 
         const hashedPassword = await bcrypt.hash(userData.password, 10)
 
@@ -35,12 +36,13 @@ class AuthService {
     }
 
     async login(userData: CreateUserDto) {
-        if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
+        if (isEmpty(userData))
+            throw new HttpException({ status: 400, message: 'Invalid user data' })
 
         const findUser = await this.model.findOne({ email: userData.email })
 
         if (!findUser)
-            throw new HttpException(409, `You're email ${userData.email} not found`)
+            throw new HttpException({ status: 409, message: 'Invalid user data' })
 
         const isPasswordMatching: boolean = await bcrypt.compare(
             userData.password,
@@ -48,7 +50,10 @@ class AuthService {
         )
 
         if (!isPasswordMatching)
-            throw new HttpException(409, "You're password not matching")
+            throw new HttpException({
+                status: 409,
+                message: 'Wrong username or password',
+            })
 
         const tokenData = this.createToken(findUser)
         const cookie = this.createCookie(tokenData)
@@ -57,15 +62,10 @@ class AuthService {
     }
 
     async logout(userData: User) {
-        if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
+        if (isEmpty(userData))
+            throw new HttpException({ status: 400, message: 'Invalid user data' })
 
-        const findUser = await this.model.findOne({
-            password: userData.password,
-        })
-
-        if (!findUser) throw new HttpException(409, "You're not user")
-
-        return findUser
+        return userData
     }
 
     createToken(user: User) {

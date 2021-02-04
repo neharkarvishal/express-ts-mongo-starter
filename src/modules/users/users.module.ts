@@ -18,6 +18,10 @@ class UsersModule implements Module {
         return new UsersModule(controller)
     }
 
+    getRouter() {
+        return this.router
+    }
+
     private initializeRouter() {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.router.get(`${this.path}`, this.controller.getUsers)

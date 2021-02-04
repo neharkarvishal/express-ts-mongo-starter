@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express'
 
 import { CreateUserDto } from './users.dto'
@@ -11,7 +12,7 @@ class UsersController {
         return new UsersController(service)
     }
 
-    getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    async getUsers(req: Request, res: Response, next: NextFunction) {
         try {
             const findAllUsersData: User[] = await this.service.findAllUser()
 
@@ -21,7 +22,7 @@ class UsersController {
         }
     }
 
-    getUserById = async (req: Request, res: Response, next: NextFunction) => {
+    async getUserById(req: Request, res: Response, next: NextFunction) {
         const userId: string = req.params.id
 
         try {
@@ -33,7 +34,7 @@ class UsersController {
         }
     }
 
-    createUser = async (req: Request, res: Response, next: NextFunction) => {
+    async createUser(req: Request, res: Response, next: NextFunction) {
         const userData: CreateUserDto = req.body
 
         try {
@@ -45,7 +46,7 @@ class UsersController {
         }
     }
 
-    updateUser = async (req: Request, res: Response, next: NextFunction) => {
+    async updateUser(req: Request, res: Response, next: NextFunction) {
         const userId: string = req.params.id
         const userData: User = req.body
 
@@ -61,7 +62,7 @@ class UsersController {
         }
     }
 
-    deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+    async deleteUser(req: Request, res: Response, next: NextFunction) {
         const userId: string = req.params.id
 
         try {

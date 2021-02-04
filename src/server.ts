@@ -12,6 +12,8 @@ import Users from './modules/users'
 import { logger } from './utils/logger'
 import validateEnv from './utils/validateEnv'
 
+require('express-async-errors')
+
 validateEnv()
 
 const appModule = App.of(express()).with([Home, Users, Auth])

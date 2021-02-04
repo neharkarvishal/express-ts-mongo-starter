@@ -41,7 +41,7 @@ class App {
         })
     }
 
-    public getExpressApp() {
+    public getExpressApp(): express.Application {
         return this.app
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express'
 
 class HomeController {
@@ -5,7 +6,7 @@ class HomeController {
         return new HomeController()
     }
 
-    index = (req: Request, res: Response, next: NextFunction) => {
+    index(req: Request, res: Response, next: NextFunction) {
         try {
             res.sendStatus(200)
         } catch (error) {

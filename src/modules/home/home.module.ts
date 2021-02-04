@@ -16,6 +16,10 @@ class HomeModule implements Module {
         return new HomeModule(controller)
     }
 
+    getRouter() {
+        return this.router
+    }
+
     private initializeRouter() {
         this.router.get(`${this.path}`, this.controller.index)
     }

@@ -17,6 +17,10 @@ class AuthModule implements Module {
         return new AuthModule(controller)
     }
 
+    getRouter() {
+        return this.router
+    }
+
     private initializeRouter() {
         this.router.post(
             '/signup',

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express'
 
 import { CreateUserDto } from '../users/users.dto'
@@ -12,10 +13,9 @@ class AuthController {
         return new AuthController(service)
     }
 
-    signUp = async (req: Request, res: Response, next: NextFunction) => {
-        const userData: CreateUserDto = req.body
-
+    async signUp(req: Request, res: Response, next: NextFunction) {
         try {
+            const userData: CreateUserDto = req.body
             const signUpUserData: User = await this.service.signup(userData)
 
             res.status(201).json({ data: signUpUserData, message: 'signup' })
@@ -24,27 +24,22 @@ class AuthController {
         }
     }
 
-    logIn = async (req: Request, res: Response, next: NextFunction) => {
-        const userData: CreateUserDto = req.body
-
+    async logIn(req: Request, res: Response, next: NextFunction) {
         try {
+            const userData: CreateUserDto = req.body
             const { cookie, findUser } = await this.service.login(userData)
-            res.setHeader('Set-Cookie', [cookie])
 
+            res.setHeader('Set-Cookie', [cookie])
             res.status(200).json({ data: findUser, message: 'login' })
         } catch (error) {
             return next(error)
         }
     }
 
-    logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-        const userData: User = req.user
-
+    async logOut(req: RequestWithUser, res: Response, next: NextFunction) {
         try {
-            const logOutUserData: User = await this.service.logout(userData)
             res.setHeader('Set-Cookie', ['Authorization=; Max-age=0'])
-
-            res.status(200).json({ data: logOutUserData, message: 'logout' })
+            res.status(200).json({ message: 'logout' })
         } catch (error) {
             return next(error)
         }
