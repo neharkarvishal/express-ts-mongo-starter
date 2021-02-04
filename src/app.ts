@@ -4,20 +4,25 @@ import cors from 'cors'
 import express, { Router } from 'express'
 import helmet from 'helmet'
 import hpp from 'hpp'
+import Redis from 'ioredis'
 import { connect, set } from 'mongoose'
 import morgan from 'morgan'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 
-import { dbConnection } from './database'
+import { redisOptions } from './config/cache'
+import { dbConnection } from './config/database'
 import HttpException from './exceptions/HttpException'
 import Controller from './interfaces/controller.interface'
 import errorMiddleware from './middlewares/error.middleware'
 import { logger, stream } from './utils/logger'
 
 class App {
+    redisClient
+
     constructor(readonly app: express.Application) {
         this.connectToDatabase()
+        this.connectToRedis()
         this.initializeMiddlewares()
         this.initializeSwagger()
     }
@@ -41,6 +46,45 @@ class App {
 
     public getExpressApp(): express.Application {
         return this.app
+    }
+
+    private connectToRedis() {
+        const logTags = { tags: ['MONGO_STATUS'] }
+
+        this.redisClient = new Redis(redisOptions)
+
+        if (this.redisClient)
+            this.redisClient
+                .on('connect', () => {
+                    logger.info('redis connection established', logTags)
+                })
+                .on('error', (error) => {
+                    logger.error('redis error', error, logTags)
+                })
+                .on('close', () => {
+                    logger.info('redis connection closed', logTags)
+                })
+                .on('reconnecting', () => {
+                    logger.info('redis reconnecting...', logTags)
+                })
+                .on('end', () => {
+                    logger.info('redis connection end', logTags)
+                })
+                .on('subscribe', (channel, count) => {
+                    logger.info(
+                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                        `Subscribed channel ${channel} count #${count}`,
+                        logTags,
+                    )
+                })
+                .on('unsubscribe', (channel, count) => {
+                    logger.info(
+                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                        `Unsubscribed channel ${channel}, ${count}`,
+                        logTags,
+                    )
+                })
+        else logger.error(`Unable to connect to redis.`)
     }
 
     private connectToDatabase() {
@@ -73,6 +117,8 @@ class App {
             .catch((error: Error) => {
                 logger.error(
                     `Unable to connect to the database: ${JSON.stringify(error)}.`,
+                    { tags: TAGS },
+                    { tags: TAGS },
                 )
             })
     }
