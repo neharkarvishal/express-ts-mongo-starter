@@ -10,7 +10,7 @@ import { RequestWithUser } from './auth.interface'
 import AuthService from './auth.service'
 
 class AuthController implements Controller {
-    path = '/auth'
+    path: '/auth' = '/auth'
 
     router = Router()
 

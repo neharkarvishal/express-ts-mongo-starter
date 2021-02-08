@@ -1,13 +1,15 @@
 interface HttpExceptionParams {
     message: string
     status?: number
-    errors?: Record<string, unknown>
+    errors?: any
 }
 
 class HttpException extends Error {
-    errors: Record<string, unknown>
+    errors: any
 
     status: number
+
+    stack?: any
 
     constructor({ message, status = 500, errors = {} }: HttpExceptionParams) {
         super(message)

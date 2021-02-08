@@ -1,7 +1,7 @@
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import express, { Router } from 'express'
+import express from 'express'
 import helmet from 'helmet'
 import hpp from 'hpp'
 import Redis from 'ioredis'
@@ -17,12 +17,33 @@ import Controller from './interfaces/controller.interface'
 import errorMiddleware from './middlewares/error.middleware'
 import { logger, stream } from './utils/logger'
 
+function successResponder(
+    this,
+    options: {
+        data: Record<any, any> | Array<any>
+        paging?: Record<string, unknown>
+        code?: number
+        message?: string
+        status?: 'success' | 'error'
+    },
+): void {
+    const { data, message = 'OK', code = 200, paging, status = 'success' } = options
+
+    // `this` refers to the bonded `res` object
+    this.status(code).json({
+        data,
+        status,
+        paging,
+        message,
+    })
+}
+
 class App {
     redisClient
 
     constructor(readonly app: express.Application) {
-        this.connectToDatabase()
-        this.connectToRedis()
+        // this.connectToDatabase()
+        // this.connectToRedis()
         this.initializeMiddlewares()
         this.initializeSwagger()
     }
@@ -118,7 +139,6 @@ class App {
                 logger.error(
                     `Unable to connect to the database: ${JSON.stringify(error)}.`,
                     { tags: TAGS },
-                    { tags: TAGS },
                 )
             })
     }
@@ -126,8 +146,8 @@ class App {
     private initializeMiddlewares() {
         if (process.env.NODE_ENV === 'production') {
             this.app.use(morgan('combined', { stream }))
-            this.app.use(cors({ origin: 'your.domain.com', credentials: true }))
-        } else if (process.env.NODE_ENV === 'development') {
+            this.app.use(cors({ origin: process.env.DOMAIN, credentials: true }))
+        } else {
             this.app.use(morgan('dev', { stream }))
             this.app.use(cors({ origin: true, credentials: true }))
         }
@@ -138,11 +158,20 @@ class App {
         this.app.use(helmet())
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: false }))
+
+        this.app.set('x-powered-by', false)
+        this.app.set('trust proxy', 1)
+
+        this.app.use((req, res, next) => {
+            // @ts-ignore
+            res.done = successResponder.bind(res)
+            next()
+        })
     }
 
     private initializeRouter(modules: Controller[]) {
         modules.forEach((module) => {
-            this.app.use('/', module.router)
+            this.app.use('/', module.getRouter())
         })
     }
 

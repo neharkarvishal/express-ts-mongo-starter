@@ -8,6 +8,7 @@ require('express-async-errors')
 const validateEnv = () => {
     cleanEnv(process.env, {
         NODE_ENV: str(),
+        DOMAIN: str(),
         PORT: port(),
         MONGO_HOST: str(),
         MONGO_PORT: str(),

@@ -26,7 +26,7 @@ paths:
         description: user Data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/Users'
       responses:
         201:
           description: 'Created'
@@ -71,7 +71,7 @@ paths:
         description: user Data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/Users'
       responses:
         200:
           description: 'OK'

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import mongoose from 'mongoose'
 
 import HttpException from '../../exceptions/HttpException'
 import { isEmpty } from '../../utils/util'

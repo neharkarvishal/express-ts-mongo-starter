@@ -24,9 +24,19 @@ const errorMiddleware = (
     next: NextFunction,
 ) => {
     try {
+        if (error instanceof HttpException) {
+            res.status(error.status).json({
+                message: error.message,
+                status: error.status,
+                errors: error.errors,
+            })
+            return
+        }
+
         const { status = 500, message, stack, errors = {} } = error
 
         logger.error(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `StatusCode : ${status}, Message : ${message} \n${
                 stack ?? 'NO STACKTRACE'
             }`,
@@ -38,6 +48,7 @@ const errorMiddleware = (
         }
 
         if (process.env.NODE_ENV !== 'development') {
+            // @ts-ignore
             response.message = // @ts-ignore Check error related for request body
                 bodyParserErrorTypes.indexOf(error?.type) === -1
                     ? 'Something went wrong'

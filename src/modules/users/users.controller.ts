@@ -8,7 +8,7 @@ import { User } from './users.interface'
 import UserService from './users.service'
 
 export default class UsersController implements Controller {
-    path = '/users'
+    path: '/users' = '/users'
 
     router = Router()
 
@@ -46,9 +46,9 @@ export default class UsersController implements Controller {
 
     getUsers = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const findAllUsersData: User[] = await this.service.findAllUser()
+            const data = await this.service.findAllUser()
 
-            res.status(200).json({ data: findAllUsersData, message: 'findAll' })
+            res.done({ data })
         } catch (error) {
             return next(error)
         }
@@ -57,9 +57,9 @@ export default class UsersController implements Controller {
     getUserById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId: string = req.params.id
-            const findOneUserData: User = await this.service.findUserById(userId)
+            const data = await this.service.findUserById(userId)
 
-            res.status(200).json({ data: findOneUserData, message: 'findOne' })
+            res.done({ data })
         } catch (error) {
             return next(error)
         }
@@ -68,9 +68,9 @@ export default class UsersController implements Controller {
     createUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: CreateUserDto = req.body
-            const createUserData: User = await this.service.createUser(userData)
+            const data = await this.service.createUser(userData)
 
-            res.status(201).json({ data: createUserData, message: 'created' })
+            res.done({ data, code: 201 })
         } catch (error) {
             return next(error)
         }
@@ -81,12 +81,9 @@ export default class UsersController implements Controller {
             const userId: string = req.params.id
             const userData: User = req.body
 
-            const updateUserData: User = await this.service.updateUser(
-                userId,
-                userData,
-            )
+            const data = await this.service.updateUser(userId, userData)
 
-            res.status(200).json({ data: updateUserData, message: 'updated' })
+            res.done({ data })
         } catch (error) {
             return next(error)
         }
@@ -95,9 +92,9 @@ export default class UsersController implements Controller {
     deleteUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId: string = req.params.id
-            const deleteUserData: User = await this.service.deleteUserData(userId)
+            const data = await this.service.deleteUserData(userId)
 
-            res.status(200).json({ data: deleteUserData, message: 'deleted' })
+            res.done({ data })
         } catch (error) {
             return next(error)
         }

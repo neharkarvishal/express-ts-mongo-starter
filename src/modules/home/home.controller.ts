@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express'
 import Controller from '../../interfaces/controller.interface'
 
 export default class HomeController implements Controller {
-    path = '/'
+    path: '/' = '/'
 
     router = Router()
 
