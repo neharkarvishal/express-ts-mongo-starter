@@ -6,20 +6,29 @@ import authMiddleware from '../../middlewares/auth.middleware'
 import validationMiddleware from '../../middlewares/validation.middleware'
 import { CreateUserDto } from '../users/users.dto'
 import { User } from '../users/users.interface'
+import UserService from '../users/users.service'
 import { RequestWithUser } from './auth.interface'
 import AuthService from './auth.service'
+
+type AuthControllerDeps = {
+    readonly authService: AuthService
+    readonly userService: UserService
+}
 
 class AuthController implements Controller {
     path: '/auth' = '/auth'
 
     router = Router()
 
-    protected constructor(readonly service: AuthService) {
+    protected constructor(
+        readonly authService: AuthService,
+        readonly userService: UserService,
+    ) {
         this.initializeRouter()
     }
 
-    static create(service: AuthService) {
-        return new AuthController(service)
+    static create({ authService, userService }: AuthControllerDeps) {
+        return new AuthController(authService, userService)
     }
 
     private initializeRouter() {
@@ -45,9 +54,9 @@ class AuthController implements Controller {
     signUp = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: CreateUserDto = req.body
-            const signUpUserData: User = await this.service.signup(userData)
+            const data = await this.userService.createUser(userData)
 
-            res.status(201).json({ data: signUpUserData, message: 'signup' })
+            res.done({ code: 201, data })
         } catch (error) {
             return next(error)
         }
@@ -56,10 +65,12 @@ class AuthController implements Controller {
     logIn = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: CreateUserDto = req.body
-            const { cookie, findUser } = await this.service.login(userData)
+            const { cookie, findUser: data } = await this.authService.login(
+                userData,
+            )
 
             res.setHeader('Set-Cookie', [cookie])
-            res.status(200).json({ data: findUser, message: 'login' })
+            res.done({ data, code: 200 })
         } catch (error) {
             return next(error)
         }

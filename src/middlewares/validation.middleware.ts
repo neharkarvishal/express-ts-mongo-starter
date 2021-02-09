@@ -7,12 +7,16 @@ import HttpException from '../exceptions/HttpException'
 
 const validationMiddleware = (
     type: any,
-    valueFrom: string | 'body' | 'query' | 'params' = 'body',
+    valueFrom: 'body' | 'query' | 'params' = 'body',
     skipMissingProperties = false,
 ): RequestHandler => {
     return (req, res, next) => {
+        // validate incoming data with passed `type` parameter ie DTO class
         validate(plainToClass(type, req[valueFrom]), {
             skipMissingProperties,
+            whitelist: true,
+            forbidUnknownValues: true,
+            forbidNonWhitelisted: true,
         }).then((errors: ValidationError[]) => {
             if (errors.length > 0) {
                 return next(

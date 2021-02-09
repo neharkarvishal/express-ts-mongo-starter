@@ -37,6 +37,14 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
         'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0, maxBOF: 0 }],
+        '@typescript-eslint/naming-convention': [
+            'error',
+            {
+                selector: 'default',
+                format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+                leadingUnderscore: 'allowSingleOrDouble',
+            },
+        ],
         // 'function-paren-newline': ['error', { minItems: 2 }],
         // 'sort-imports': [
         //     'warn',

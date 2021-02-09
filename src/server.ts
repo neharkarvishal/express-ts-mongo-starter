@@ -6,20 +6,25 @@ import * as http from 'http'
 
 import App from './app'
 import dbPromise from './config/database'
-import Auth from './modules/auth'
-import Home from './modules/home'
-import Users from './modules/users'
+import AuthModule from './modules/auth'
+import HomeModule from './modules/home'
+import UsersModule from './modules/users'
 import { logger } from './utils/logger'
 
 Promise.all([dbPromise('app')]).then(([db]) => {
-    const appModule = App.of(express()).with([Home, Users, Auth])
+    const expressInstance = express()
 
-    const app = appModule.getExpressApp()
+    /** initialize your `app` with routes from Modules */
+    const appModule = App.of(expressInstance).with([
+        HomeModule,
+        UsersModule,
+        AuthModule,
+    ])
 
     /**
      * Create HTTP server
      */
-    const server = http.createServer(app)
+    const server = http.createServer(expressInstance)
     const port = process.env.PORT || 3000
 
     server.listen(port)
@@ -31,7 +36,7 @@ Promise.all([dbPromise('app')]).then(([db]) => {
 
         const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`
 
-        // @ts-ignore handle specific listen errors with friendly messages
+        // @ts-ignore, handle specific listen errors with friendly messages
         switch (error.code) {
             case 'EACCES':
                 logger.error(`${bind} requires elevated privileges`)
@@ -48,9 +53,9 @@ Promise.all([dbPromise('app')]).then(([db]) => {
 
     server.on('listening', () => {
         const addr = server.address()
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const bind =
-            typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`
+            typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+
         logger.info(`Listening on ${bind}`)
     })
 })

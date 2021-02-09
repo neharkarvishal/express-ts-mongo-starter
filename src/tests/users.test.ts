@@ -14,7 +14,7 @@ describe('Testing Users', () => {
         it('response All Users', () => {
             const usersController = UsersModule
 
-            usersController.service.model.find = jest.fn().mockReturnValue(
+            usersController.userService.model.find = jest.fn().mockReturnValue(
                 Promise.resolve([
                     {
                         email: 'example@gmail.com',

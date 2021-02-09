@@ -109,13 +109,15 @@ definitions:
         - password
     properties:
       id:
-        description: user Id
+        description: User Id
       email:
         type: string
-        description: user Email
+        description: User Email
+        example: 'abc@demo.com'
       password:
         type: string
-        description: user Password
+        description: Password
+        example: '12345678'
 
 schemes:
  - https

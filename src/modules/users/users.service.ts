@@ -1,7 +1,11 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 
-import HttpException from '../../exceptions/HttpException'
+import HttpException, {
+    BadRequest,
+    Conflict,
+    NotFound,
+} from '../../exceptions/HttpException'
 import { isEmpty } from '../../utils/util'
 import { CreateUserDto } from './users.dto'
 import { User } from './users.interface'
@@ -21,30 +25,33 @@ class UserService {
     async findUserById(userId: string) {
         const user = await this.model.findOne({ _id: userId })
 
-        if (!user)
-            throw new HttpException({ message: 'User not found', status: 409 })
+        if (!user) return Promise.reject(NotFound({ message: 'User not found' }))
 
         return user
     }
 
     async createUser(userData: CreateUserDto) {
         if (isEmpty(userData))
-            throw new HttpException({ status: 400, message: 'Invalid user data' })
+            return Promise.reject(BadRequest({ message: 'Invalid user data' }))
 
         const findUser = await this.model.findOne({ email: userData.email })
 
         if (findUser)
-            throw new HttpException({
-                status: 409,
-                message: `Email ${userData.email} already exists`,
-            })
+            return Promise.reject(
+                Conflict({ message: `Email ${userData.email} already exists` }),
+            )
 
         const hashedPassword = await bcrypt.hash(userData.password, 10)
 
-        return this.model.create({
+        // @ts-ignore
+        const saved = await this.model.create({
             ...userData,
             password: hashedPassword,
         })
+
+        const { __v, createdAt, updatedAt, password, ...user } = saved.toObject()
+
+        return user as ObjectOf<Partial<typeof UserModel>>
     }
 
     async updateUser(userId: string, userData: User) {
@@ -58,7 +65,7 @@ class UserService {
         })
 
         if (!updateUserById)
-            throw new HttpException({ status: 409, message: 'Invalid user data' })
+            return Promise.reject(BadRequest({ message: 'Invalid user data' }))
 
         return updateUserById
     }
@@ -67,7 +74,7 @@ class UserService {
         const deleteUserById = await this.model.findByIdAndDelete(userId)
 
         if (!deleteUserById)
-            throw new HttpException({ status: 409, message: 'Invalid user data' })
+            throw new HttpException({ status: 400, message: 'Invalid user data' })
 
         return deleteUserById
     }

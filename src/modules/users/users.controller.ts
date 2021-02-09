@@ -7,17 +7,19 @@ import { CreateUserDto } from './users.dto'
 import { User } from './users.interface'
 import UserService from './users.service'
 
+type UsersControllerDeps = { userService: UserService }
+
 export default class UsersController implements Controller {
     path: '/users' = '/users'
 
     router = Router()
 
-    protected constructor(readonly service: UserService) {
+    protected constructor(readonly userService: UserService) {
         this.initializeRouter()
     }
 
-    static create(service: UserService) {
-        return new UsersController(service)
+    static create({ userService }: UsersControllerDeps) {
+        return new UsersController(userService)
     }
 
     private initializeRouter() {
@@ -46,7 +48,7 @@ export default class UsersController implements Controller {
 
     getUsers = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const data = await this.service.findAllUser()
+            const data = await this.userService.findAllUser()
 
             res.done({ data })
         } catch (error) {
@@ -57,7 +59,7 @@ export default class UsersController implements Controller {
     getUserById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId: string = req.params.id
-            const data = await this.service.findUserById(userId)
+            const data = await this.userService.findUserById(userId)
 
             res.done({ data })
         } catch (error) {
@@ -68,7 +70,7 @@ export default class UsersController implements Controller {
     createUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: CreateUserDto = req.body
-            const data = await this.service.createUser(userData)
+            const data = await this.userService.createUser(userData)
 
             res.done({ data, code: 201 })
         } catch (error) {
@@ -81,7 +83,7 @@ export default class UsersController implements Controller {
             const userId: string = req.params.id
             const userData: User = req.body
 
-            const data = await this.service.updateUser(userId, userData)
+            const data = await this.userService.updateUser(userId, userData)
 
             res.done({ data })
         } catch (error) {
@@ -92,7 +94,7 @@ export default class UsersController implements Controller {
     deleteUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId: string = req.params.id
-            const data = await this.service.deleteUserData(userId)
+            const data = await this.userService.deleteUserData(userId)
 
             res.done({ data })
         } catch (error) {

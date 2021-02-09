@@ -1,14 +1,14 @@
 import bcrypt from 'bcrypt'
+import express from 'express'
 import mongoose from 'mongoose'
 import request from 'supertest'
 
 import App from '../app'
 import HttpException from '../exceptions/HttpException'
-import { TokenData } from '../modules/auth/auth.interface'
 import AuthModule from '../modules/auth'
+import { TokenData } from '../modules/auth/auth.interface'
 import AuthService from '../modules/auth/auth.service'
 import { CreateUserDto } from '../modules/users/users.dto'
-import express from 'express'
 import UserModel from '../modules/users/users.model'
 
 afterAll(async () => {
@@ -25,11 +25,11 @@ describe('Testing AuthController', () => {
 
             const authController = AuthModule
 
-            authController.service.model.findOne = jest
+            authController.authService.model.findOne = jest
                 .fn()
                 .mockReturnValue(Promise.resolve(undefined))
 
-            authController.service.model.create = jest
+            authController.authService.model.create = jest
                 .fn()
                 .mockReturnValue({ _id: 0, ...userData })
 
@@ -50,7 +50,7 @@ describe('Testing AuthController', () => {
 
             const authController = AuthModule
 
-            authController.service.model.findOne = jest.fn().mockReturnValue(
+            authController.authService.model.findOne = jest.fn().mockReturnValue(
                 Promise.resolve({
                     _id: 0,
                     email: 'test@email.com',
@@ -91,47 +91,6 @@ describe('Testing AuthService', () => {
             const authService = AuthService.create(UserModel)
 
             expect(typeof authService.createCookie(tokenData)).toEqual('string')
-        })
-    })
-
-    describe('when registering a user', () => {
-        describe('if the email is already token', () => {
-            it('should throw an error', async () => {
-                const userData: CreateUserDto = {
-                    email: 'test@email.com',
-                    password: 'q1w2e3r4!',
-                }
-
-                const authService = AuthService.create(UserModel)
-
-                authService.model.findOne = jest
-                    .fn()
-                    .mockReturnValue(Promise.resolve(userData))
-
-                await expect(authService.signup(userData)).rejects.toMatchObject(
-                    new HttpException({ message: '' }),
-                )
-            })
-        })
-
-        describe('if the email is not token', () => {
-            it('should not throw an error', async () => {
-                const userData: CreateUserDto = {
-                    email: 'test@email.com',
-                    password: 'q1w2e3r4!',
-                }
-                process.env.JWT_SECRET = 'jwt_secret'
-                const authService = AuthService.create(UserModel)
-                authService.model.findOne = jest
-                    .fn()
-                    .mockReturnValue(Promise.resolve(undefined))
-
-                authService.model.create = jest
-                    .fn()
-                    .mockReturnValue({ _id: 0, ...userData })
-
-                await expect(authService.signup(userData)).resolves.toBeDefined()
-            })
         })
     })
 })

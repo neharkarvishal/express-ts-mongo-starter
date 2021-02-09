@@ -21,3 +21,12 @@ declare namespace IORedis {
         purge(...args): any
     }
 }
+
+// Non Function Property Names
+type NonFunctionProperties<T> = {
+    [K in keyof T]: T[K] extends Function ? never : K
+}[keyof T]
+
+type PropertiesOf<T> = Pick<T, NonFunctionProperties<T>>
+type ObjectOf<T> = Pick<T, NonFunctionProperties<T>>
+type JsonOf<T> = Pick<T, NonFunctionProperties<T>>

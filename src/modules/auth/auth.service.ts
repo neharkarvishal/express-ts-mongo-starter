@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import HttpException from '../../exceptions/HttpException'
+import HttpException, { BadRequest, Conflict } from '../../exceptions/HttpException'
 import { isEmpty } from '../../utils/util'
 import { CreateUserDto } from '../users/users.dto'
 import { User } from '../users/users.interface'
@@ -15,34 +15,14 @@ class AuthService {
         return new AuthService(model)
     }
 
-    async signup(userData: CreateUserDto) {
-        if (isEmpty(userData))
-            throw new HttpException({ status: 400, message: 'Invalid user data' })
-
-        const findUser = await this.model.findOne({ email: userData.email })
-
-        if (findUser)
-            throw new HttpException({
-                status: 409,
-                message: `Email ${userData.email} already exists`,
-            })
-
-        const hashedPassword = await bcrypt.hash(userData.password, 10)
-
-        return this.model.create({
-            ...userData,
-            password: hashedPassword,
-        })
-    }
-
     async login(userData: CreateUserDto) {
         if (isEmpty(userData))
-            throw new HttpException({ status: 400, message: 'Invalid user data' })
+            return Promise.reject(BadRequest({ message: 'Invalid user data' }))
 
         const findUser = await this.model.findOne({ email: userData.email })
 
         if (!findUser)
-            throw new HttpException({ status: 409, message: 'Invalid user data' })
+            return Promise.reject(BadRequest({ message: 'Invalid user data' }))
 
         const isPasswordMatching: boolean = await bcrypt.compare(
             userData.password,
@@ -50,10 +30,9 @@ class AuthService {
         )
 
         if (!isPasswordMatching)
-            throw new HttpException({
-                status: 409,
-                message: 'Wrong username or password',
-            })
+            return Promise.reject(
+                BadRequest({ message: 'Wrong username or password' }),
+            )
 
         const tokenData = this.createToken(findUser)
         const cookie = this.createCookie(tokenData)
@@ -63,7 +42,7 @@ class AuthService {
 
     async logout(userData: User) {
         if (isEmpty(userData))
-            throw new HttpException({ status: 400, message: 'Invalid user data' })
+            return Promise.reject(BadRequest({ message: 'Invalid user data' }))
 
         return userData
     }
