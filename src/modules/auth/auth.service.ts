@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import HttpException, { BadRequest, Conflict } from '../../exceptions/HttpException'
+import ApiException, { BadRequest, Conflict } from '../../exceptions/ApiException'
 import { isEmpty } from '../../utils/util'
 import { CreateUserDto } from '../users/users.dto'
 import { User } from '../users/users.interface'

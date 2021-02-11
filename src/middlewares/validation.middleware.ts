@@ -3,7 +3,7 @@ import { plainToClass } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { RequestHandler } from 'express'
 
-import HttpException from '../exceptions/HttpException'
+import ApiException from '../exceptions/ApiException'
 
 const validationMiddleware = (
     type: any,
@@ -20,7 +20,7 @@ const validationMiddleware = (
         }).then((errors: ValidationError[]) => {
             if (errors.length > 0) {
                 return next(
-                    new HttpException({
+                    new ApiException({
                         message: 'Invalid data',
                         status: 400,
                         errors: errors

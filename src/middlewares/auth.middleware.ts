@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express'
 import jwt from 'jsonwebtoken'
 
-import HttpException from '../exceptions/HttpException'
+import ApiException from '../exceptions/ApiException'
 import { DataStoredInToken, RequestWithUser } from '../modules/auth/auth.interface'
 import UserModel from '../modules/users/users.model'
 
@@ -33,7 +33,7 @@ const authMiddleware = async (
             }
 
             return next(
-                new HttpException({
+                new ApiException({
                     message: 'Wrong authentication token',
                     status: 401,
                 }),
@@ -41,14 +41,14 @@ const authMiddleware = async (
         }
 
         return next(
-            new HttpException({
+            new ApiException({
                 message: 'Authentication token missing',
                 status: 404,
             }),
         )
     } catch (error) {
         return next(
-            new HttpException({
+            new ApiException({
                 message: 'Wrong authentication token',
                 status: 401,
             }),

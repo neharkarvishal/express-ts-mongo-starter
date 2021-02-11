@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 
-import HttpException, {
+import ApiException, {
     BadRequest,
     Conflict,
     NotFound,
-} from '../../exceptions/HttpException'
+} from '../../exceptions/ApiException'
 import { isEmpty } from '../../utils/util'
 import { CreateUserDto } from './users.dto'
 import { User } from './users.interface'
@@ -56,7 +56,7 @@ class UserService {
 
     async updateUser(userId: string, userData: User) {
         if (isEmpty(userData))
-            throw new HttpException({ status: 400, message: 'Invalid user data' })
+            throw new ApiException({ status: 400, message: 'Invalid user data' })
 
         const hashedPassword = await bcrypt.hash(userData.password, 10)
         const updateUserById = await this.model.findByIdAndUpdate(userId, {
@@ -74,7 +74,7 @@ class UserService {
         const deleteUserById = await this.model.findByIdAndDelete(userId)
 
         if (!deleteUserById)
-            throw new HttpException({ status: 400, message: 'Invalid user data' })
+            throw new ApiException({ status: 400, message: 'Invalid user data' })
 
         return deleteUserById
     }

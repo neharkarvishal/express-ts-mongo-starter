@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
-import HttpException from '../exceptions/HttpException'
+import ApiException from '../exceptions/ApiException'
 import { logger } from '../utils/logger'
 
 // error handler
@@ -18,13 +18,13 @@ const bodyParserErrorTypes = [
 ]
 
 const errorMiddleware = (
-    error: HttpException,
+    error: ApiException,
     req: Request,
     res: Response,
     next: NextFunction,
 ) => {
     try {
-        if (error instanceof HttpException) {
+        if (error instanceof ApiException) {
             res.status(error.status).json({
                 message: error.message,
                 status: error.status,

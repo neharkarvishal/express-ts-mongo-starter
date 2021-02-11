@@ -91,7 +91,6 @@ export default async (type = 'app') => {
                 })
                 return m
             })
-            .catch((e) => logger.error(e, { tags: TAGS }))
     } catch (e) {
         logger.error(e, { tags: TAGS })
         return Promise.reject(e)

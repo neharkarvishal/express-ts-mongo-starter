@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import request from 'supertest'
 
 import App from '../app'
-import HttpException from '../exceptions/HttpException'
+import ApiException from '../exceptions/ApiException'
 import AuthModule from '../modules/auth'
 import { TokenData } from '../modules/auth/auth.interface'
 import AuthService from '../modules/auth/auth.service'
