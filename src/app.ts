@@ -14,7 +14,7 @@ import { logger, stream } from './utils/logger'
 function successResponder(
     this,
     options: {
-        data: Record<any, any> | Array<any>
+        data: Record<any, any> | Array<any> | any
         paging?: Record<string, unknown>
         code?: number
         message?: string

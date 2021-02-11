@@ -73,6 +73,7 @@ module.exports = {
         ],
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/require-await': 'warn',
+        '@typescript-eslint/unbound-method': 'warn',
         '@typescript-eslint/no-unsafe-call': 'warn',
         '@typescript-eslint/no-unused-vars': 'warn',
         '@typescript-eslint/no-explicit-any': 'off',

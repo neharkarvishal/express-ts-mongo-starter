@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import './config/env'
 
 import * as http from 'http'
@@ -6,17 +5,17 @@ import * as http from 'http'
 import app from './app'
 import dbPromise from './config/database'
 import ApiException, { NotFound } from './exceptions/ApiException'
+import routes from './routes'
 import { logger } from './utils/logger'
 
 Promise.all([dbPromise('app')])
     .then((dependencies) => {
         const [db] = dependencies
 
-        app.use((req, res, next) => {
-            res.done({ data: {} })
-        })
+        /** init routes */
+        app.use(routes({ db }))
 
-        /** 404'd then forward to error handler */
+        /** 404'd paths -> forward to error handler */
         app.use((req, res, next) => {
             next(NotFound())
         })
@@ -24,10 +23,13 @@ Promise.all([dbPromise('app')])
         /** Error handler */
         app.use((e, req, res, next) => {
             if (e instanceof ApiException) {
-                res.status(e.stack).json({
+                res.status(e.status).json({
                     message: e.message,
                     status: e.status,
-                    errors: e.errors,
+                    errors:
+                        e.errors && Object.keys(e.errors).length
+                            ? e.errors
+                            : undefined,
                 })
                 return
             }
