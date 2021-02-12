@@ -11,6 +11,7 @@ import { logger } from './utils/logger'
 Promise.all([dbPromise('app')])
     .then((dependencies) => {
         const [db] = dependencies
+        console.log({ models: db.modelNames() })
 
         /** init routes */
         app.use(routes({ db }))

@@ -1,7 +1,8 @@
 import { NotFound } from '../../exceptions/ApiException'
+import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
 import { CaseInterface } from './case.interface'
-import CaseModel, { CaseDocument } from './case.model'
+import CaseModel from './case.model'
 
 const logCases = { tags: ['BACKEND', 'CASE-SERVICE'] }
 const projection = { __v: 0, createdAt: 0, updatedAt: 0, deletedAt: 0 }
@@ -51,7 +52,9 @@ async function getCase({ id }: { id: string }): Promise<CaseInterface> {
                 ],
             },
             projection,
-        ).exec()
+        )
+            .populate({ path: 'animalDetails.image', model: MediaModel })
+            .exec()
 
         if (!existingCase)
             return Promise.reject(
@@ -137,8 +140,6 @@ async function updateCase({
     fields: Record<string, any>
 }) {
     try {
-        const { name } = fields
-
         const existingCase = await CaseModel.findOne({
             _id: id,
         }).exec()
@@ -150,7 +151,6 @@ async function updateCase({
                 }),
             )
 
-        existingCase.name = name
         await existingCase.save()
         logger.info(`Case updated: ${existingCase._id}`, logCases)
 

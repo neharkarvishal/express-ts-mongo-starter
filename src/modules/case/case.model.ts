@@ -2,12 +2,25 @@ import { Document, model, Schema } from 'mongoose'
 
 import { PointSchema } from '../../shared/models/GeoJSONPoint'
 import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
-import { CaseInterface } from './case.interface'
 
-const CaseCollectionName = 'case' as const
+const CaseCollectionName = 'Case' as const
 
-export interface CaseDocument extends CaseInterface, Document {
+export interface CaseDocument extends Document {
     _id: string
+    animalDetails: {
+        type: string
+        name?: string
+        color?: string
+        identificationMark: string
+        image?: string
+    }
+    description?: string
+    address?: string
+    phoneNumber: string
+    alternatePhoneNumber?: string
+    point: Record<string, any>
+    area?: Record<string, any>
+
     deletedAt: Date | null
 }
 
@@ -17,7 +30,7 @@ export const CaseSchema = new Schema(
             type: {
                 type: String,
                 enum: ['DOG', 'CAT', 'UNKNOWN'],
-                default: 'unknown',
+                default: 'UNKNOWN',
                 required: true,
                 trim: true,
                 uppercase: true,
@@ -39,6 +52,11 @@ export const CaseSchema = new Schema(
                 required: false,
                 trim: true,
                 lowercase: true,
+            },
+            image: {
+                type: Schema.Types.ObjectId,
+                ref: 'Media',
+                required: false,
             },
         },
         description: {
@@ -70,6 +88,11 @@ export const CaseSchema = new Schema(
         },
         area: {
             type: PolygonSchema,
+            required: false,
+        },
+        addedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
             required: false,
         },
         deletedAt: {

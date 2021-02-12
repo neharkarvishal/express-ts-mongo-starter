@@ -10,6 +10,11 @@ export const caseSchema = Joi.object({
 
         name: Joi.string().min(2).max(38).optional().label('Animal Name'),
 
+        image: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+            .optional()
+            .label('Media Image'),
+
         color: Joi.string().min(2).max(38).optional().label('Animal Color'),
 
         identificationMark: Joi.string()
@@ -21,9 +26,9 @@ export const caseSchema = Joi.object({
         .required()
         .label('Animal Details'),
 
-    description: Joi.string().min(2).max(360).label('Address'),
+    description: Joi.string().optional().min(2).max(360).label('Address'),
 
-    address: Joi.string().min(2).max(360).label('Address'),
+    address: Joi.string().optional().min(2).max(360).label('Address'),
 
     phoneNumber: Joi.string()
         .length(10)
@@ -61,7 +66,7 @@ export const caseSchema = Joi.object({
      * @example { "type": "Polygon", "coordinates": [[ [-109, 41], [-102, 41], [-102, 37], [-109, 37], [-109, 41], ]] }
      */
     area: Joi.object({
-        type: Joi.string().valid('Polygon'),
+        type: Joi.string().required().valid('Polygon'),
 
         coordinates: Joi.array() // type: [[[Number]]]
             .required()
