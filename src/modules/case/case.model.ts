@@ -13,20 +13,55 @@ export interface CaseDocument extends CaseInterface, Document {
 
 export const CaseSchema = new Schema(
     {
-        name: {
+        animalDetails: {
+            type: {
+                type: String,
+                enum: ['DOG', 'CAT', 'UNKNOWN'],
+                default: 'unknown',
+                required: true,
+                trim: true,
+                uppercase: true,
+            },
+            name: {
+                type: String,
+                required: false,
+                trim: true,
+                lowercase: true,
+            },
+            color: {
+                type: String,
+                required: false,
+                trim: true,
+                lowercase: true,
+            },
+            identificationMark: {
+                type: String,
+                required: false,
+                trim: true,
+                lowercase: true,
+            },
+        },
+        description: {
             type: String,
             required: false,
+            trim: true,
+            lowercase: true,
         },
-        animalType: {
+        address: {
             type: String,
-            enum: ['DOG', 'CAT', 'UNKNOWN'],
-            default: 'UNKNOWN',
+            required: false,
+            trim: true,
+            lowercase: true,
+        },
+        phoneNumber: {
+            type: String,
+            trim: true,
             required: true,
         },
-        location: {
-            latitude: String,
-            longitude: String,
-            address: String,
+        alternatePhoneNumber: {
+            type: String,
+            trim: true,
+            required: false,
         },
         point: {
             type: PointSchema,

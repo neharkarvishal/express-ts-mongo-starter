@@ -2,16 +2,40 @@ import Joi from 'joi'
 
 /** Validation Schema */
 export const caseSchema = Joi.object({
-    name: Joi.string().min(2).max(60).optional().label('Case Name'),
+    animalDetails: Joi.object({
+        type: Joi.string()
+            .required()
+            .valid('DOG', 'CAT', 'UNKNOWN')
+            .label('Animal Type'),
 
-    location: Joi.object({
-        latitude: Joi.number().min(-90).max(90).label('Latitude'),
-        longitude: Joi.number().min(-180).max(180).label('Longitude'),
+        name: Joi.string().min(2).max(38).optional().label('Animal Name'),
 
-        address: Joi.string().min(2).max(220).label('Address'),
+        color: Joi.string().min(2).max(38).optional().label('Animal Color'),
+
+        identificationMark: Joi.string()
+            .min(2)
+            .max(60)
+            .optional()
+            .label('Animal Identification Mark'),
     })
+        .required()
+        .label('Animal Details'),
+
+    description: Joi.string().min(2).max(360).label('Address'),
+
+    address: Joi.string().min(2).max(360).label('Address'),
+
+    phoneNumber: Joi.string()
+        .length(10)
+        .pattern(/^[0-9]+$/)
+        .required()
+        .label('Phone Number'),
+
+    alternatePhoneNumber: Joi.string()
+        .length(10)
+        .pattern(/^[0-9]+$/)
         .optional()
-        .label('Location'),
+        .label('Alternate Phone Number'),
 
     /** @example { "type" : "Point", "coordinates" : [ -122.5, 37.7 ] } */
     point: Joi.object({
@@ -26,7 +50,7 @@ export const caseSchema = Joi.object({
             .label('coordinates'),
     })
         .label('point')
-        .optional()
+        .required()
         .description('Please use this format [ longitude, latitude]'),
 
     /**
@@ -67,10 +91,7 @@ export const caseSchema = Joi.object({
                     .label('coordinates-later-1'),
             )
             .label('coordinates-layer-0'),
-    }).optional(),
-
-    animalType: Joi.string()
-        .required()
-        .valid('DOG', 'CAT', 'UNKNOWN')
-        .label('Animal Type'),
+    })
+        .optional()
+        .label('area'),
 }).label('Cases validation schema')
