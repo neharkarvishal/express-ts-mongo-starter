@@ -1,12 +1,11 @@
 /* eslint-disable consistent-return,@typescript-eslint/no-misused-promises */
 import express, { RequestHandler } from 'express'
-import Joi from 'joi'
 import mongoose from 'mongoose'
 
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
-import { logger } from '../../utils/logger'
 import caseService from './case.service'
+import { caseSchema } from './case.validator'
 
 const logCases = { tags: ['BACKEND', 'CASE-CONTROLLER'] }
 
@@ -20,11 +19,6 @@ const {
 } = caseService()
 
 const router = express.Router()
-
-/** Validation Schema */
-const caseSchema = Joi.object({
-    name: Joi.string().min(2).max(60).required().label('Case Name'),
-}).label('Cases validation schema')
 
 /** RequestHandler */
 function getAllCasesHandler(): RequestHandler {
