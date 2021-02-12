@@ -48,6 +48,7 @@ export const MediaSchema = new Schema(
     },
     {
         timestamps: true,
+        optimisticConcurrency: true,
     },
 )
 

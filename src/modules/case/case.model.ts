@@ -102,6 +102,7 @@ export const CaseSchema = new Schema(
     },
     {
         timestamps: true,
+        optimisticConcurrency: true,
     },
 )
 
