@@ -48,19 +48,19 @@ export default async (type = 'app') => {
         })
 
         connection.on('error', (err) => {
-            logger.error(err, { tags: TAGS })
+            logger.error(err, { case: TAGS })
         })
 
         connection.on('reconnected', () => {
-            logger.info('[DB] mongodb reconnected', { tags: TAGS })
+            logger.info('[DB] mongodb reconnected', { case: TAGS })
         })
 
         connection.on('disconnected', () => {
-            logger.warn('[DB] mongodb disconnected', { tags: TAGS })
+            logger.warn('[DB] mongodb disconnected', { case: TAGS })
         })
 
         connection.once('open', () => {
-            logger.info('[DB] mongodb connection established', { tags: TAGS })
+            logger.info('[DB] mongodb connection established', { case: TAGS })
         })
         return connection
         */

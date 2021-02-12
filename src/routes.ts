@@ -1,12 +1,12 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 
-import tagsController from './modules/tags/tags.controller'
+import caseController from './modules/case/case.controller'
 
 const router = Router()
 
 const routes = (options: { db: typeof mongoose }) => {
-    router.use('/tags', tagsController(options))
+    router.use('/cases', caseController(options))
 
     return router
 }

@@ -1,12 +1,15 @@
 import { Document, model, Schema } from 'mongoose'
 
-export interface ITag extends Document {
+import { CaseInterface } from './case.interface'
+
+const CaseCollectionName = 'case' as const
+
+export interface CaseDocument extends CaseInterface, Document {
     _id: string
-    name: string
     deletedAt: Date | null
 }
 
-export const TagSchema = new Schema(
+export const CaseSchema = new Schema(
     {
         name: {
             type: String,
@@ -22,6 +25,6 @@ export const TagSchema = new Schema(
     },
 )
 
-const TagModel = model<ITag>('Tag', TagSchema)
+const CaseModel = model<CaseDocument>(CaseCollectionName, CaseSchema)
 
-export default TagModel
+export default CaseModel

@@ -2,7 +2,7 @@ import express from 'express'
 import request from 'supertest'
 
 import App from '../app'
-import HomeController from '../modules/tags/tags.controller'
+import HomeController from '../modules/case/case.controller'
 
 afterAll(async () => {
     await new Promise<void>((resolve) => setTimeout(() => resolve(), 500))

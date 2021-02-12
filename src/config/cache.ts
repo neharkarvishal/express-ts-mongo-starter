@@ -81,18 +81,18 @@ redisClient.remember = async (key, expiry, callback = async () => {}) => {
 
 // @ts-ignore
 redisClient.put = (key, tagsCsv = '', cacheTTL, data) => {
-    const tags = tagsCsv
+    const case = tagsCsv
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean)
 
-    if (tags.length) {
+    if (case.length) {
         // cache data with tag
         const multi = redisClient.multi()
 
         multi.setex(key, cacheTTL, JSON.stringify(data))
 
-        tags.forEach((tag) => {
+        case.forEach((tag) => {
             multi.sadd(`tag:${tag}`, key)
         })
 
@@ -169,15 +169,15 @@ const deleteSetMembersCache = (setKeys) =>
 
 // @ts-ignore
 redisClient.purge = (tagsCsv = '') => {
-    const tags = tagsCsv
+    const case = tagsCsv
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean)
 
-    if (tags.length) {
+    if (case.length) {
         const multi = redisClient.multi()
 
-        const renamedTagKeys = tags.map((tag) => {
+        const renamedTagKeys = case.map((tag) => {
             const oldKey = `tag:${tag}`
             const newKey = `tag:temp:${tag}-${uuidv4()}`
             multi.rename(oldKey, newKey) // rename tag to a temp key
