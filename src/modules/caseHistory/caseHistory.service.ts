@@ -23,7 +23,7 @@ async function getCaseHistory({ caseId }: { caseId: string }): Promise<any> {
             },
             projection,
         )
-            .sort({ updatedAt: 'desc' })
+            .sort({ createdAt: 'desc' })
             .populate({ path: 'case', model: CaseModel, select: projection })
             .populate({ path: 'volunteer', model: UserModel, select: projection })
             .exec()
