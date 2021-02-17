@@ -12,7 +12,7 @@ export const CaseHistorySchema = new Schema(
     {
         description: {
             type: String,
-            required: false,
+            required: true,
             trim: true,
             lowercase: true,
         },

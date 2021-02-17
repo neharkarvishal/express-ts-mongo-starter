@@ -50,7 +50,12 @@ function caseHistoryController(options: { db: typeof mongoose }) {
     router.get('/:id/history', validObjectId(), getCaseHistoryHandler(options))
 
     /** POST */
-    router.post('/:id/history', validObjectId(), createCaseHistoryHandler(options))
+    router.post(
+        '/:id/history',
+        validObjectId(),
+        validator(createCaseSchema),
+        createCaseHistoryHandler(options),
+    )
 
     return router
 }

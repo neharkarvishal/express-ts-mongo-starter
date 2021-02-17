@@ -17,12 +17,13 @@ const projection = {
 /** Get single record by id */
 async function getCaseHistory({ caseId }: { caseId: string }): Promise<any> {
     try {
-        const existingCase = await CaseHistoryModel.findOne(
+        const existingCase = await CaseHistoryModel.find(
             {
                 case: caseId,
             },
             projection,
         )
+            .sort({ updatedAt: 'desc' })
             .populate({ path: 'case', model: CaseModel, select: projection })
             .populate({ path: 'volunteer', model: UserModel, select: projection })
             .exec()
