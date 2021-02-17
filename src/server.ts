@@ -4,14 +4,20 @@ import * as http from 'http'
 
 import app from './app'
 import dbPromise from './config/database'
+import getModels from './database/models'
 import ApiException, { NotFound } from './exceptions/ApiException'
 import routes from './routes'
 import { logger } from './utils/logger'
 
 Promise.all([dbPromise('app')])
     .then((dependencies) => {
+        /** dependencies */
         const [db] = dependencies
-        console.log({ models: db.modelNames() })
+
+        console.log('models loaded', {
+            models: getModels(),
+            imports: db.modelNames(),
+        })
 
         /** init routes */
         app.use(routes({ db }))

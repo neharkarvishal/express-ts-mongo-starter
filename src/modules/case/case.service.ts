@@ -1,11 +1,12 @@
 import { NotFound } from '../../exceptions/ApiException'
 import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
+import UserModel from '../users/user.model'
 import { CaseInterface } from './case.interface'
 import CaseModel from './case.model'
 
 const logCases = { tags: ['BACKEND', 'CASE-SERVICE'] }
-const projection = { __v: 0, createdAt: 0, updatedAt: 0, deletedAt: 0 }
+const projection = { __v: 0, createdAt: 0, updatedAt: 0, deletedAt: 0, password: 0 }
 
 /** Get all of the records */
 async function getAllCases(query: Record<string, any>): Promise<CaseInterface[]> {
@@ -54,6 +55,7 @@ async function getCase({ id }: { id: string }): Promise<CaseInterface> {
             projection,
         )
             .populate({ path: 'animalDetails.image', model: MediaModel })
+            .populate({ path: 'addedBy', model: UserModel, select: projection })
             .exec()
 
         if (!existingCase)
