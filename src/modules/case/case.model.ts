@@ -7,6 +7,7 @@ const CaseCollectionName = 'Case' as const
 
 export interface CaseDocument extends Document {
     _id: string
+    status: string
     animalDetails: {
         type: string
         name?: string
@@ -26,6 +27,22 @@ export interface CaseDocument extends Document {
 
 export const CaseSchema = new Schema(
     {
+        status: {
+            type: String,
+            enum: ['OPEN', 'PENDING', 'CLOSED', 'ABANDONED', 'REOPENED'],
+            default: 'OPEN',
+            required: true,
+            trim: true,
+            uppercase: true,
+        },
+        type: {
+            type: String,
+            enum: ['INJURY', 'ABUSE', 'CLOSED', 'ATTACK', 'OTHER'],
+            default: 'INJURY',
+            required: true,
+            trim: true,
+            uppercase: true,
+        },
         animalDetails: {
             type: {
                 type: String,

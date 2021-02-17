@@ -6,7 +6,13 @@ import { CaseInterface } from './case.interface'
 import CaseModel from './case.model'
 
 const logCases = { tags: ['BACKEND', 'CASE-SERVICE'] }
-const projection = { __v: 0, createdAt: 0, updatedAt: 0, deletedAt: 0, password: 0 }
+const projection = {
+    __v: 0,
+    // createdAt: 0,
+    updatedAt: 0,
+    deletedAt: 0,
+    password: 0,
+}
 
 /** Get all of the records */
 async function getAllCases(query: Record<string, any>): Promise<CaseInterface[]> {
@@ -85,8 +91,8 @@ async function createCase({
         const {
             __v,
             createdAt,
-            updatedAt,
-            deletedAt,
+            // updatedAt,
+            // deletedAt,
             ...data
         } = savedCase.toObject()
 
@@ -124,7 +130,13 @@ async function deleteCase({ id }: { id: string }): Promise<CaseInterface> {
 
         logger.info(`Case deleted: ${existingCase._id}`, logCases)
 
-        const { __v, createdAt, updatedAt, ...data } = existingCase.toObject()
+        const {
+            __v,
+            // createdAt,
+            updatedAt,
+            deletedAt,
+            ...data
+        } = existingCase.toObject()
 
         return data as CaseInterface
     } catch (error) {
@@ -142,27 +154,47 @@ async function updateCase({
     fields: Record<string, any>
 }) {
     try {
-        const existingCase = await CaseModel.findOne({
+        const existing = await CaseModel.findOne({
             _id: id,
         }).exec()
 
-        if (!existingCase)
+        if (!existing)
             return Promise.reject(
                 NotFound({
                     caseId: 'Case does not exist.',
                 }),
             )
 
-        await existingCase.save()
-        logger.info(`Case updated: ${existingCase._id}`, logCases)
+        // updating adminalDetails
+        if (fields?.animalDetails) {
+            if (fields.animalDetails?.type)
+                existing.animalDetails.type = fields.animalDetails.type
+
+            existing.markModified('animalDetails')
+        }
+
+        // updating status
+        if (fields?.status) {
+            existing.status = fields.status
+            existing.markModified('status')
+        }
+
+        // updating point(location)
+        if (fields?.point) {
+            existing.point = fields.point
+            existing.markModified('point')
+        }
+
+        await existing.save()
+        logger.info(`Case updated: ${existing._id}`, logCases)
 
         const {
             __v,
-            createdAt,
+            // createdAt,
             updatedAt,
             deletedAt,
             ...data
-        } = existingCase.toObject()
+        } = existing.toObject()
 
         return data
     } catch (error) {

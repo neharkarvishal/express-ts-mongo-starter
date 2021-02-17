@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
 import caseService from './case.service'
-import { caseSchema } from './case.validator'
+import { createCaseSchema, updateCaseSchema } from './case.validator'
 
 const logCases = { tags: ['BACKEND', 'CASE-CONTROLLER'] }
 
@@ -21,10 +21,14 @@ const {
 const router = express.Router()
 
 /** RequestHandler */
-function getAllCasesHandler(): RequestHandler {
+function getAllCasesHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const data = await getAllCases({})
+            const { query } = req
+
+            console.log({ query })
+
+            const data = await getAllCases(query)
 
             res.done({ data })
         } catch (error) {
@@ -34,7 +38,7 @@ function getAllCasesHandler(): RequestHandler {
 }
 
 /** RequestHandler */
-function getAllCasesIncludeDeletedHandler(): RequestHandler {
+function getAllCasesIncludeDeletedHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const data = await getAllCasesIncludeDeleted({})
@@ -47,7 +51,7 @@ function getAllCasesIncludeDeletedHandler(): RequestHandler {
 }
 
 /** RequestHandler */
-function getCaseHandler(): RequestHandler {
+function getCaseHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
@@ -61,7 +65,7 @@ function getCaseHandler(): RequestHandler {
 }
 
 /** RequestHandler */
-function createCaseHandler(): RequestHandler {
+function createCaseHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const data = await createCase({ fields: req.body })
@@ -74,7 +78,7 @@ function createCaseHandler(): RequestHandler {
 }
 
 /** RequestHandler */
-function deleteCaseHandler(): RequestHandler {
+function deleteCaseHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
@@ -88,7 +92,7 @@ function deleteCaseHandler(): RequestHandler {
 }
 
 /** RequestHandler */
-function updateCaseHandler(): RequestHandler {
+function updateCaseHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
@@ -103,12 +107,28 @@ function updateCaseHandler(): RequestHandler {
 
 /** Case Controller */
 function caseController(options: { db: typeof mongoose }) {
-    router.get('/', getAllCasesHandler())
-    router.get('/raw', getAllCasesIncludeDeletedHandler())
-    router.get('/:id', validObjectId(), getCaseHandler())
-    router.post('/', validator(caseSchema), createCaseHandler())
-    router.delete('/:id', validObjectId(), deleteCaseHandler())
-    router.put('/:id', validObjectId(), validator(caseSchema), updateCaseHandler())
+    /** GET */
+    router.get('/', getAllCasesHandler(options))
+
+    /** GET */
+    router.get('/raw', getAllCasesIncludeDeletedHandler(options))
+
+    /** GET */
+    router.get('/:id', validObjectId(), getCaseHandler(options))
+
+    /** POST */
+    router.post('/', validator(createCaseSchema), createCaseHandler(options))
+
+    /** DELETE */
+    router.delete('/:id', validObjectId(), deleteCaseHandler(options))
+
+    /** PUT */
+    router.put(
+        '/:id',
+        validObjectId(),
+        validator(updateCaseSchema),
+        updateCaseHandler(options),
+    )
 
     return router
 }
