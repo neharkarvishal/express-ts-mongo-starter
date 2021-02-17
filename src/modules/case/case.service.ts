@@ -65,11 +65,7 @@ async function getCase({ id }: { id: string }): Promise<CaseInterface> {
             .exec()
 
         if (!existingCase)
-            return Promise.reject(
-                NotFound({
-                    caseId: 'Case does not exist.',
-                }),
-            )
+            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
 
         return existingCase
     } catch (error) {
@@ -118,11 +114,7 @@ async function deleteCase({ id }: { id: string }): Promise<CaseInterface> {
         }).exec()
 
         if (!existingCase)
-            return Promise.reject(
-                NotFound({
-                    caseId: 'Case does not exist.',
-                }),
-            )
+            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
 
         existingCase.deletedAt = new Date()
         existingCase.markModified('deletedAt')
@@ -159,11 +151,7 @@ async function updateCase({
         }).exec()
 
         if (!existing)
-            return Promise.reject(
-                NotFound({
-                    caseId: 'Case does not exist.',
-                }),
-            )
+            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
 
         // updating adminalDetails
         if (fields?.animalDetails) {

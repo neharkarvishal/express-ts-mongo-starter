@@ -6,6 +6,14 @@ export interface User extends Document {
     _id: string
     email: string
     password: string
+    role: string[]
+    name?: string
+    description?: string
+    address?: string
+    phoneNumber: string
+    alternatePhoneNumber?: string
+    point: Record<string, any>
+    deletedAt: Date | null
 }
 
 export const UserSchema = new Schema(
@@ -13,6 +21,8 @@ export const UserSchema = new Schema(
         email: {
             type: String,
             required: true,
+            trim: true,
+            lowercase: true,
         },
         password: {
             type: String,
@@ -21,55 +31,36 @@ export const UserSchema = new Schema(
         name: {
             type: String,
             required: false,
+            trim: true,
+            lowercase: true,
         },
         emailVerifiedAt: Date,
-        salt: String,
-        status: String,
-        roles: [String],
-        mobileNumber: String,
+        status: {
+            type: String,
+            enum: ['NOT_ACTIVATED', 'ACTIVATED', 'DISABLED', 'DELETED'],
+            default: 'NOT_ACTIVATED',
+            required: true,
+            trim: true,
+            uppercase: true,
+        },
+        roles: {
+            type: [String],
+            // enum: ['ADMIN', 'NGO_ADMIN', 'NGO_FO', 'VOLUNTEER', 'USER'],
+            default: ['USER'],
+            required: true,
+        },
+        phoneNumber: { type: String, required: false },
+        alternatePhoneNumber: { type: String, required: false },
+        deletedAt: {
+            type: Date,
+            default: null,
+        },
     },
     {
         timestamps: true,
+        optimisticConcurrency: true,
     },
 )
-
-// pbkdf2 configurations
-const iterationCount = 1000
-const keylen = 64
-const digest = 'sha512'
-
-// pre hook to hash plain password
-// UserSchema.pre<User & Document>('save', function preSaveHook(next) {
-//     if (this.isModified('password') || this.isNew) {
-//         const user = this // eslint-disable-line @typescript-eslint/no-this-alias
-//
-//         // get a salt for password hashing
-//         const salt = uuidv4()
-//
-//         crypto.pbkdf2(
-//             user.password,
-//             salt,
-//             iterationCount,
-//             keylen,
-//             digest,
-//             (cryptoErr, derivedKey) => {
-//                 if (cryptoErr) {
-//                     next(cryptoErr)
-//                     return
-//                 }
-//
-//                 // assign generated key and salt to user
-//                 user.password = derivedKey.toString('hex')
-//                 user.salt = salt
-//
-//                 // continue
-//                 next()
-//             },
-//         )
-//     } else {
-//         next()
-//     }
-// })
 
 const UserModel = model<User>('User', UserSchema)
 

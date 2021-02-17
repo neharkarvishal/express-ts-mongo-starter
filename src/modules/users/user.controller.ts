@@ -4,28 +4,28 @@ import mongoose from 'mongoose'
 
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
-import caseService from './case.service'
-import { createCaseSchema, updateCaseSchema } from './case.validator'
+import userService from './user.service'
+import { createUserSchema, updateUserSchema } from './user.validator'
 
-const logCases = { tags: ['BACKEND', 'CASE-CONTROLLER'] }
+const logUsers = { tags: ['BACKEND', 'USER-CONTROLLER'] }
 
 const {
-    getCase,
-    getAllCases,
-    createCase,
-    deleteCase,
-    updateCase,
-    getAllCasesIncludeDeleted,
-} = caseService()
+    getUser,
+    getAllUsers,
+    createUser,
+    deleteUser,
+    updateUser,
+    getAllUsersIncludeDeleted,
+} = userService()
 
 const router = express.Router()
 
 /** RequestHandler */
-function getAllCasesHandler(options): RequestHandler {
+function getAllUsersHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { query = {} } = req
-            const data = await getAllCases(query)
+            const data = await getAllUsers(query)
 
             res.done({ data })
         } catch (error) {
@@ -35,11 +35,11 @@ function getAllCasesHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
-function getAllCasesIncludeDeletedHandler(options): RequestHandler {
+function getAllUsersIncludeDeletedHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { query = {} } = req
-            const data = await getAllCasesIncludeDeleted(query)
+            const data = await getAllUsersIncludeDeleted(query)
 
             res.done({ data })
         } catch (error) {
@@ -49,11 +49,11 @@ function getAllCasesIncludeDeletedHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
-function getCaseHandler(options): RequestHandler {
+function getUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
-            const data = await getCase({ id })
+            const data = await getUser({ id })
 
             res.done({ code: 200, data })
         } catch (error) {
@@ -63,10 +63,10 @@ function getCaseHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
-function createCaseHandler(options): RequestHandler {
+function createUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const data = await createCase({ fields: req.body })
+            const data = await createUser({ fields: req.body })
 
             res.done({ data, code: 201 })
         } catch (error) {
@@ -76,11 +76,11 @@ function createCaseHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
-function deleteCaseHandler(options): RequestHandler {
+function deleteUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
-            const data = await deleteCase({ id })
+            const data = await deleteUser({ id })
 
             res.done({ data, code: 204 })
         } catch (error) {
@@ -90,11 +90,11 @@ function deleteCaseHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
-function updateCaseHandler(options): RequestHandler {
+function updateUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
-            const data = await updateCase({ id, fields: req.body })
+            const data = await updateUser({ id, fields: req.body })
 
             res.done({ data })
         } catch (error) {
@@ -103,32 +103,32 @@ function updateCaseHandler(options): RequestHandler {
     }
 }
 
-/** Case Controller */
-function caseController(options: { db: typeof mongoose }) {
+/** User Controller */
+function userController(options: { db: typeof mongoose }) {
     /** GET */
-    router.get('/', getAllCasesHandler(options))
+    router.get('/', getAllUsersHandler(options))
 
     /** GET */
-    router.get('/raw', getAllCasesIncludeDeletedHandler(options))
+    router.get('/raw', getAllUsersIncludeDeletedHandler(options))
 
     /** GET */
-    router.get('/:id', validObjectId(), getCaseHandler(options))
+    router.get('/:id', validObjectId(), getUserHandler(options))
 
     /** POST */
-    router.post('/', validator(createCaseSchema), createCaseHandler(options))
+    router.post('/', validator(createUserSchema), createUserHandler(options))
 
     /** DELETE */
-    router.delete('/:id', validObjectId(), deleteCaseHandler(options))
+    router.delete('/:id', validObjectId(), deleteUserHandler(options))
 
     /** PUT */
     router.put(
         '/:id',
         validObjectId(),
-        validator(updateCaseSchema),
-        updateCaseHandler(options),
+        validator(updateUserSchema),
+        updateUserHandler(options),
     )
 
     return router
 }
 
-export default caseController
+export default userController
