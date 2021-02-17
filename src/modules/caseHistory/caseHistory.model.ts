@@ -16,14 +16,15 @@ export const CaseHistorySchema = new Schema(
             trim: true,
             lowercase: true,
         },
-        addedBy: {
+        case: {
+            type: Schema.Types.ObjectId,
+            ref: 'Case',
+            required: true,
+        },
+        volunteer: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: false,
-        },
-        deletedAt: {
-            type: Date,
-            default: null,
+            required: true,
         },
     },
     {
