@@ -5,7 +5,10 @@ import { logger } from '../../utils/logger'
 import UserModel from '../users/user.model'
 import NgoModel from './ngo.model'
 
+const EARTHS_RADIUS_IN_KM = 6371 as const
+
 const logNGOs = { tags: ['BACKEND', 'NGO-SERVICE'] }
+
 const projection = {
     __v: 0,
     createdAt: 0,
@@ -21,18 +24,23 @@ async function getAllNGOs(query: Record<string, any>) {
             // defaults to mumbai's coordinates
             longitude = 72.877,
             latitude = 19.076,
-            maxDistance = 10, // get the max distance or set it to 10 kilometers
-            minDistance = 0,
+
+            /*
+             get the max|min distance or set it to 8|0 KMs
+             Note: KMs if we use legacy coordinates and divides it by earths radius, otherwise assume meters
+            */
+            maxDistance = 8,
+            minDistance = Number.MIN_VALUE,
         } = query
 
-        longitude = Number(longitude)
-        latitude = Number(latitude)
+        /*
+         we need to convert the distance to radians, the radius of Earth is approx 6371 KM
+         because mongoose's near() function takes point using legacy coordinates system of radians
 
-        maxDistance = Number(maxDistance)
-        minDistance = Number(minDistance)
-        console.log({ longitude, latitude, maxDistance })
-
-        maxDistance /= 6371 // we need to convert the distance to radians, the radius of Earth is approx 6371 KMs
+         REFER: https://docs.mongodb.com/manual/reference/operator/query/nearSphere/index.html
+        */
+        maxDistance /= EARTHS_RADIUS_IN_KM
+        minDistance /= EARTHS_RADIUS_IN_KM
 
         return await NgoModel.find({}, projection)
             .where('area')
