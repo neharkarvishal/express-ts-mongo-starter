@@ -5,7 +5,7 @@ import CaseModel from '../case/case.model'
 import UserModel from '../users/user.model'
 import CaseHistoryModel from './caseHistory.model'
 
-const logCases = { tags: ['BACKEND', 'CASE-SERVICE'] }
+const logCases = { tags: ['BACKEND', 'CASE-HISTORY-SERVICE'] }
 const projection = {
     __v: 0,
     // createdAt: 0,
@@ -15,15 +15,14 @@ const projection = {
 }
 
 /** Get single record by id */
-async function getCaseHistory({ caseId }: { caseId: string }): Promise<any> {
+async function getCaseHistory({ id }: { id: string }) {
     try {
         const existingCase = await CaseHistoryModel.find(
             {
-                case: caseId,
+                _id: id,
             },
             projection,
         )
-            .sort({ createdAt: 'desc' })
             .populate({ path: 'case', model: CaseModel, select: projection })
             .populate({ path: 'volunteer', model: UserModel, select: projection })
             .exec()
@@ -38,11 +37,7 @@ async function getCaseHistory({ caseId }: { caseId: string }): Promise<any> {
 }
 
 /** Create one record */
-async function createCaseHistory({
-    fields,
-}: {
-    fields: Record<string, any>
-}): Promise<any> {
+async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
     try {
         const newCaseHistory = new CaseHistoryModel(fields)
         const savedCase = await newCaseHistory.save()

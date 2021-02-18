@@ -4,12 +4,10 @@ import Joi from 'joi'
 export const createCaseSchema = Joi.object({
     description: Joi.string().required().min(2).max(360).label('description'),
 
-    /*
     case: Joi.string()
         .required()
         .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
         .label('case'),
-    */
 
     volunteer: Joi.string()
         .required()
@@ -21,12 +19,10 @@ export const createCaseSchema = Joi.object({
 export const updateCaseSchema = Joi.object({
     description: Joi.string().optional().min(2).max(360).label('description'),
 
-    /*
     case: Joi.string()
-        .required()
+        .optional()
         .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
         .label('case'),
-    */
 
     volunteer: Joi.string()
         .optional()

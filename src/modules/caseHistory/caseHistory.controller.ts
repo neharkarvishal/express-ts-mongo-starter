@@ -18,7 +18,7 @@ function getCaseHistoryHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
-            const data = await getCaseHistory({ caseId: id })
+            const data = await getCaseHistory({ id })
 
             res.done({ code: 200, data })
         } catch (error) {
@@ -31,11 +31,7 @@ function getCaseHistoryHandler(options): RequestHandler {
 function createCaseHistoryHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const { id } = req.params
-            const fields = req.body
-            fields.case = id
-
-            const data = await createCaseHistory({ fields })
+            const data = await createCaseHistory({ fields: req.body })
 
             res.done({ data, code: 201 })
         } catch (error) {
@@ -47,15 +43,10 @@ function createCaseHistoryHandler(options): RequestHandler {
 /** Case Controller */
 function caseHistoryController(options: { db: typeof mongoose }) {
     /** GET */
-    router.get('/:id/history', validObjectId(), getCaseHistoryHandler(options))
+    router.get('/:id', validObjectId(), getCaseHistoryHandler(options))
 
     /** POST */
-    router.post(
-        '/:id/history',
-        validObjectId(),
-        validator(createCaseSchema),
-        createCaseHistoryHandler(options),
-    )
+    router.post('/', validator(createCaseSchema), createCaseHistoryHandler(options))
 
     return router
 }
