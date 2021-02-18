@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { NotFound } from '../../exceptions/ApiException'
 import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
@@ -16,17 +17,31 @@ const projection = {
 /** Get all of the records */
 async function getAllNGOs(query: Record<string, any>) {
     try {
-        return await NgoModel.find(
-            {
-                $and: [
-                    query,
-                    {
-                        deletedAt: null,
-                    },
-                ],
-            },
-            projection,
-        ).lean()
+        let {
+            // defaults to mumbai's coordinates
+            longitude = 72.877,
+            latitude = 19.076,
+            maxDistance = 10, // get the max distance or set it to 10 kilometers
+            minDistance = 0,
+        } = query
+
+        longitude = Number(longitude)
+        latitude = Number(latitude)
+
+        maxDistance = Number(maxDistance)
+        minDistance = Number(minDistance)
+        console.log({ longitude, latitude, maxDistance })
+
+        maxDistance /= 6371 // we need to convert the distance to radians, the radius of Earth is approx 6371 KMs
+
+        return await NgoModel.find({}, projection)
+            .where('area')
+            .near({
+                center: [longitude, latitude],
+                spherical: true,
+                maxDistance,
+                minDistance,
+            })
     } catch (error) {
         return Promise.reject(error)
     }
@@ -145,12 +160,6 @@ async function updateNGO({
 
         if (!existing)
             return Promise.reject(NotFound({ caseId: 'NGO does not exist.' }))
-
-        // updating point(location)
-        if (fields?.point) {
-            existing.point = fields.point
-            existing.markModified('point')
-        }
 
         // updating area
         if (fields?.area) {

@@ -11,7 +11,6 @@ export interface NGODocument extends Document {
     address?: string
     phoneNumber: string
     alternatePhoneNumber?: string
-    point: Record<string, any>
     area?: Record<string, any>
 
     deletedAt: Date | null
@@ -41,14 +40,17 @@ export const NGOSchema = new Schema(
             trim: true,
             required: false,
         },
-        point: {
-            type: PointSchema,
-            required: false,
-            index: '2dsphere', // Create a special 2dsphere index
-        },
         area: {
-            type: PolygonSchema,
-            required: true,
+            type: {
+                type: String,
+                enum: ['Polygon'],
+                default: 'Point',
+                required: true,
+            },
+            coordinates: {
+                type: [[[Number]]], // Array of arrays of arrays of coordinate numbers
+                required: true,
+            },
         },
         deletedAt: {
             type: Date,
@@ -60,6 +62,8 @@ export const NGOSchema = new Schema(
         optimisticConcurrency: true,
     },
 )
+
+NGOSchema.index({ area: '2dsphere' })
 
 const NgoModel = model<NGODocument>(NGOCollectionName, NGOSchema)
 

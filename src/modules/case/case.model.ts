@@ -2,6 +2,7 @@ import { Document, model, Schema } from 'mongoose'
 
 import { PointSchema } from '../../shared/models/GeoJSONPoint'
 import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
+import { NGOSchema } from '../ngo/ngo.model'
 
 const CaseCollectionName = 'Case' as const
 
@@ -20,7 +21,6 @@ export interface CaseDocument extends Document {
     phoneNumber: string
     alternatePhoneNumber?: string
     point: Record<string, any>
-    area?: Record<string, any>
 
     deletedAt: Date | null
 }
@@ -99,13 +99,16 @@ export const CaseSchema = new Schema(
             required: false,
         },
         point: {
-            type: PointSchema,
-            required: true,
-            index: '2dsphere', // Create a special 2dsphere index
-        },
-        area: {
-            type: PolygonSchema,
-            required: false,
+            type: {
+                type: String, // Don't do `{ location: { type: String } }`
+                enum: ['Point'], // 'location.type' must be 'Point'
+                default: 'Point',
+                required: true,
+            },
+            coordinates: {
+                type: [Number],
+                required: true,
+            },
         },
         addedBy: {
             type: Schema.Types.ObjectId,
@@ -122,6 +125,8 @@ export const CaseSchema = new Schema(
         optimisticConcurrency: true,
     },
 )
+
+CaseSchema.index({ point: '2dsphere' })
 
 const CaseModel = model<CaseDocument>(CaseCollectionName, CaseSchema)
 

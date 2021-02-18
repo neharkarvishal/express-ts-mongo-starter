@@ -18,22 +18,6 @@ export const createNGOSchema = Joi.object({
         .optional()
         .label('Alternate Phone Number'),
 
-    /** @example { "type" : "Point", "coordinates" : [ -122.5, 37.7 ] } */
-    point: Joi.object({
-        type: Joi.string().required().valid('Point'),
-
-        coordinates: Joi.array()
-            .required()
-            .ordered(
-                Joi.number().min(-180).max(180).required().label('longitude'),
-                Joi.number().min(-90).max(90).required().label('latitude'),
-            )
-            .label('coordinates'),
-    })
-        .label('point')
-        .optional()
-        .description('Please use this format [ longitude, latitude]'),
-
     /**
      * An array of linear ring coordinate arrays
      * coordinates: Array<
@@ -82,22 +66,6 @@ export const updateNGOSchema = Joi.object({
     description: Joi.string().optional().min(2).max(360).label('description'),
 
     address: Joi.string().optional().min(2).max(360).label('address'),
-
-    /** @example { "type" : "Point", "coordinates" : [ -122.5, 37.7 ] } */
-    point: Joi.object({
-        type: Joi.string().required().valid('Point'),
-
-        coordinates: Joi.array()
-            .required()
-            .ordered(
-                Joi.number().min(-180).max(180).required().label('longitude'),
-                Joi.number().min(-90).max(90).required().label('latitude'),
-            )
-            .label('coordinates'),
-    })
-        .label('point')
-        .optional()
-        .description('Please use this format [ longitude, latitude]'),
 
     /**
      * An array of linear ring coordinate arrays
