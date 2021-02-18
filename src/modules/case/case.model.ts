@@ -100,7 +100,7 @@ export const CaseSchema = new Schema(
         },
         point: {
             type: PointSchema,
-            required: false,
+            required: true,
             index: '2dsphere', // Create a special 2dsphere index
         },
         area: {
