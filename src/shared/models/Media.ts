@@ -1,6 +1,6 @@
 import { Document, model, Schema } from 'mongoose'
 
-const MediaCollectionName = 'Media' as const
+export const MediaCollectionName = 'Media' as const
 
 interface MediaDocument extends Document {
     _id: string

@@ -2,6 +2,8 @@ import crypto from 'crypto'
 import { Document, model, Schema } from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
+export const UserCollectionName = 'User' as const
+
 export interface User extends Document {
     _id: string
     email: string
@@ -62,6 +64,6 @@ export const UserSchema = new Schema(
     },
 )
 
-const UserModel = model<User>('User', UserSchema)
+const UserModel = model<User>(UserCollectionName, UserSchema)
 
 export default UserModel

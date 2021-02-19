@@ -3,7 +3,7 @@ import { Document, model, Schema } from 'mongoose'
 import { PointSchema } from '../../shared/models/GeoJSONPoint'
 import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
 
-const NGOCollectionName = 'NGO' as const
+export const NGOCollectionName = 'NGO' as const
 
 export interface NGODocument extends Document {
     _id: string

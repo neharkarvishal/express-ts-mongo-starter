@@ -2,6 +2,11 @@ import Joi from 'joi'
 
 /** Validation Schema, please updated respected Model when updating following */
 export const createCaseSchema = Joi.object({
+    addedBy: Joi.string()
+        .required()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('addedBy'),
+
     status: Joi.string()
         .optional()
         .valid('OPEN', 'PENDING', 'CLOSED', 'ABANDONED', 'REOPENED')

@@ -2,13 +2,16 @@ import { Document, model, Schema } from 'mongoose'
 
 import { PointSchema } from '../../shared/models/GeoJSONPoint'
 import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
-import { NGOSchema } from '../ngo/ngo.model'
+import { MediaCollectionName } from '../../shared/models/Media'
+import { NGOCollectionName, NGOSchema } from '../ngo/ngo.model'
+import { UserCollectionName } from '../users/user.model'
 
-const CaseCollectionName = 'Case' as const
+export const CaseCollectionName = 'Case' as const
 
 export interface CaseDocument extends Document {
     _id: string
     status: string
+    type: string
     animalDetails: {
         type: string
         name?: string
@@ -21,6 +24,8 @@ export interface CaseDocument extends Document {
     phoneNumber: string
     alternatePhoneNumber?: string
     point: Record<string, any>
+    addedBy: string
+    assignedNgo: string
 
     deletedAt: Date | null
 }
@@ -72,7 +77,7 @@ export const CaseSchema = new Schema(
             },
             image: {
                 type: Schema.Types.ObjectId,
-                ref: 'Media',
+                ref: MediaCollectionName,
                 required: false,
             },
         },
@@ -112,8 +117,13 @@ export const CaseSchema = new Schema(
         },
         addedBy: {
             type: Schema.Types.ObjectId,
-            ref: 'User',
-            required: false,
+            ref: UserCollectionName,
+            required: true,
+        },
+        assignedNgo: {
+            type: Schema.Types.ObjectId,
+            ref: NGOCollectionName,
+            required: true,
         },
         deletedAt: {
             type: Date,
