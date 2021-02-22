@@ -1,124 +1,1150 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: HLine
+  termsOfService: /terms&service
+  contact:
+    email: help@petkonnect.com
+  description: "# **HLine API**"
+# host: localhost
+# basePath: /
 tags:
-- name: users
-  description: users API
+  - name: user
+    description: Operations about user
 
 paths:
-# [GET] users
+  #[User]
   /users:
-    get:
-      tags:
-      - users
-      summary: Find All Users
-      responses:
-        200:
-          description: 'OK'
-        500:
-          description: 'Server Error'
-
-# [POST] users
     post:
       tags:
-      - users
-      summary: Add User
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
       parameters:
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/Users'
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
       responses:
-        201:
-          description: 'Created'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [GET] users/id
-  /users/{id}:
+        default:
+          description: successful operation
+  /users/login:
     get:
       tags:
-      - users
-      summary: Find User By Id
+        - user
+      summary: Logs user into the system
+      description: ''
+      produces:
+        - application/json
       parameters:
-      - name: id
-        in: path
-        description: User Id
-        required: true
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          type: string
       responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [PUT] users/id
+        '200':
+          description: successful operation
+          schema:
+            type: string
+          headers:
+            X-Rate-Limit:
+              type: integer
+              format: int32
+              description: calls per hour allowed by the user
+            X-Expires-After:
+              type: string
+              format: date-time
+              description: date in UTC when token expires
+        '400':
+          description: Invalid username/password supplied
+  /users/forgot-passowrd:
+    post:
+      tags:
+        - user
+      summary: Forgot password request
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: The user id for password reset request
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Invalid user supplied
+  /users/rest-passowrd:
+    post:
+      tags:
+        - user
+      summary: Reset password request
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: query
+          description: The token for password reset request
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Invalid user supplied
+  '/users/{id}':
+    get:
+      tags:
+        - user
+      summary: Get user by user name
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
     put:
       tags:
-      - users
-      summary: Update User By Id
+        - user
+      summary: Updated user
+      description: This can only be done by the logged in user.
       parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/Users'
+        - name: id
+          in: path
+          description: name that need to be updated
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Updated user object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
       responses:
-        200:
-          description: 'OK'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [DELETE] users/id
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
     delete:
       tags:
-      - users
-      summary: Delete User By Id
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
       parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
+        - name: id
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          type: string
       responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
 
-# definitions
+  #[NgoAdmin]
+  /ngo-admin:
+    post:
+      tags:
+        - ngoAdmin
+      summary: Create ngo-admin
+      description: This can only be done by the logged in ngo-admin.
+      parameters:
+        - in: body
+          name: body
+          description: Created ngo-admin object
+          required: true
+          schema:
+            $ref: '#/definitions/NgoAdmin'
+      responses:
+        default:
+          description: successful operation
+  /ngo-admin/login:
+    get:
+      tags:
+        - ngoAdmin
+      summary: Logs ngo-admin into the system
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+          headers:
+            X-Rate-Limit:
+              type: integer
+              format: int32
+              description: calls per hour allowed by the user
+            X-Expires-After:
+              type: string
+              format: date-time
+              description: date in UTC when token expires
+        '400':
+          description: Invalid username/password supplied
+  /ngo-admin/forgot-passowrd:
+    post:
+      tags:
+        - ngoAdmin
+      summary: Forgot password request
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: The ngo-admin id for password reset request
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Invalid user supplied
+  /ngo-admin/rest-passowrd:
+    post:
+      tags:
+        - ngoAdmin
+      summary: Reset password request
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: query
+          description: The token for password reset request
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Invalid user supplied
+  '/ngo-admin/{id}':
+    get:
+      tags:
+        - ngoAdmin
+      summary: Get user by ngo-admin name
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/NgoAdmin'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - ngoAdmin
+      summary: Updated user
+      description: This can only be done by the logged in user.
+      parameters:
+        - name: id
+          in: path
+          description: name that need to be updated
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Updated user object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - ngoAdmin
+      summary: Delete ngo-admin
+      description: This can only be done by the logged in ngo-admin.
+      parameters:
+        - name: id
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid ngo-admin username supplied
+        '404':
+          description: ngo-admin not found
+
+  #[Volunteer]
+  /volunteers:
+    post:
+      tags:
+        - volunteer
+      summary: Create volunteer
+      description: This can only be done by the logged in volunteer.
+      parameters:
+        - in: body
+          name: body
+          description: Created volunteer object
+          required: true
+          schema:
+            $ref: '#/definitions/NgoAdmin'
+      responses:
+        default:
+          description: successful operation
+  /volunteers/login:
+    get:
+      tags:
+        - volunteer
+      summary: Logs volunteer into the system
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+          headers:
+            X-Rate-Limit:
+              type: integer
+              format: int32
+              description: calls per hour allowed by the user
+            X-Expires-After:
+              type: string
+              format: date-time
+              description: date in UTC when token expires
+        '400':
+          description: Invalid username/password supplied
+  /volunteers/forgot-passowrd:
+    post:
+      tags:
+        - volunteer
+      summary: Forgot password request
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: The volunteer id for password reset request
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Invalid user supplied
+  /volunteers/rest-passowrd:
+    post:
+      tags:
+        - volunteer
+      summary: Reset password request
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: query
+          description: The token for password reset request
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: string
+        '400':
+          description: Invalid user supplied
+  '/volunteers/{id}':
+    get:
+      tags:
+        - volunteer
+      summary: Get user by volunteer name
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/NgoAdmin'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - volunteer
+      summary: Updated user
+      description: This can only be done by the logged in user.
+      parameters:
+        - name: id
+          in: path
+          description: name that need to be updated
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Updated user object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - volunteer
+      summary: Delete volunteer
+      description: This can only be done by the logged in volunteer.
+      parameters:
+        - name: id
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          type: string
+      responses:
+        '400':
+          description: Invalid volunteer username supplied
+        '404':
+          description: volunteer not found
+
+  #[Case]
+  /cases:
+    post:
+      tags:
+        - case
+      summary: Add a new reco
+      description: ''
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Case'
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - case
+      summary: Update an existing case
+      description: ''
+      parameters:
+        - in: body
+          name: body
+          description: Case object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/Case'
+      responses:
+        '200':
+          description: OK
+  '/cases/{id}':
+    get:
+      tags:
+        - case
+      summary: Find case by ID
+      description: Returns a single case
+      parameters:
+        - name: id
+          in: path
+          description: ID of case to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Case'
+    post:
+      tags:
+        - case
+      summary: Updates a case with form data
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: id
+          in: path
+          description: ID of case that needs to be updated
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - case
+      summary: Deletes a Case
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          description: Case id to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+
+  #[CaseHistory]
+  /case-history:
+    post:
+      tags:
+        - caseHistory
+      summary: Add a new caseHistory
+      description: ''
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CaseHistory'
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - caseHistory
+      summary: Update an existing caseHistory
+      description: ''
+      parameters:
+        - in: body
+          name: body
+          description: caseHistory object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/CaseHistory'
+      responses:
+        '200':
+          description: OK
+  '/case-history/{id}':
+    get:
+      tags:
+        - caseHistory
+      summary: Find caseHistory by ID
+      description: Returns a single caseHistory
+      parameters:
+        - name: id
+          in: path
+          description: ID of caseHistory to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CaseHistory'
+    post:
+      tags:
+        - caseHistory
+      summary: Updates a caseHistory with form data
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: id
+          in: path
+          description: ID of caseHistory that needs to be updated
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - caseHistory
+      summary: Deletes a Case
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          description: Case id to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+
+  #[NGO]
+  /ngos:
+    post:
+      tags:
+        - ngos
+      summary: Add a new ngo
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Ngo'
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - ngos
+      summary: Update an existing Ngo
+      parameters:
+        - in: body
+          name: body
+          description: Ngo object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/Ngo'
+      responses:
+        '200':
+          description: OK
+  '/ngos/{id}':
+    get:
+      tags:
+        - ngos
+      summary: Find ngo by ID
+      description: Returns a single Ngo
+      parameters:
+        - name: id
+          in: path
+          description: ID of ngo to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Ngo'
+    post:
+      tags:
+        - ngos
+      summary: Updates a Ngo with form data
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: id
+          in: path
+          description: ID of case that needs to be updated
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - ngos
+      summary: Deletes a Ngo
+      parameters:
+        - name: id
+          in: path
+          description: Ngo id to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+
+  #[Medic]
+  /medics:
+    post:
+      tags:
+        - medics
+      summary: Add a new medic
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Medic'
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - medics
+      summary: Update an existing Medic
+      parameters:
+        - in: body
+          name: body
+          description: Ngo object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/Medic'
+      responses:
+        '200':
+          description: OK
+  '/medics/{id}':
+    get:
+      tags:
+        - medics
+      summary: Find medic by ID
+      description: Returns a single Medic
+      parameters:
+        - name: id
+          in: path
+          description: ID of medic to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Medic'
+    post:
+      tags:
+        - medics
+      summary: Updates a Medic with form data
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: id
+          in: path
+          description: ID of case that needs to be updated
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - medics
+      summary: Deletes a Medic
+      parameters:
+        - name: id
+          in: path
+          description: Medic id to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+
+  #[TaskList]
+  /task-list:
+    post:
+      tags:
+        - taskList
+      summary: Add a new taskList
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/TaskList'
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - taskList
+      summary: Update an existing taskList
+      parameters:
+        - in: body
+          name: body
+          description: TaskList object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/TaskList'
+      responses:
+        '200':
+          description: OK
+  '/task-list/{id}':
+    get:
+      tags:
+        - taskList
+      summary: Find taskList by ID
+      description: Returns a single taskList
+      parameters:
+        - name: id
+          in: path
+          description: ID of taskList to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TaskList'
+    post:
+      tags:
+        - taskList
+      summary: Updates a taskList with form data
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: id
+          in: path
+          description: ID of taskList that needs to be updated
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - taskList
+      summary: Deletes a taskList
+      parameters:
+        - name: id
+          in: path
+          description: taskList id to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+
 definitions:
-  Users:
+  User:
     type: object
-    required:
-        - email
-        - password
     properties:
-      id:
-        description: User Id
+      _id:
+        type: string
       email:
         type: string
-        description: User Email
         example: 'abc@demo.com'
       password:
         type: string
-        description: Password
         example: '12345678'
+      name:
+        type: string
+      status:
+        type: string
+      phoneNumber:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      emailVerifiedAt:
+        type: string
+        format: date-time
+      role:
+        type: array
+        items:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+    required:
+      - email
+      - password
+      - phoneNumber
 
-schemes:
- - https
- - http
+  NgoAdmin:
+    type: object
+    properties:
+      _id:
+        type: string
+      email:
+        type: string
+        example: 'abc@demo.com'
+      password:
+        type: string
+        example: '12345678'
+      name:
+        type: string
+      status:
+        type: string
+      phoneNumber:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      emailVerifiedAt:
+        type: string
+        format: date-time
+      role:
+        type: array
+        items:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+    required:
+      - email
+      - password
+      - phoneNumber
+
+  Volunteer:
+    type: object
+    properties:
+      _id:
+        type: string
+      email:
+        type: string
+        example: 'abc@demo.com'
+      password:
+        type: string
+        example: '12345678'
+      name:
+        type: string
+      status:
+        type: string
+      phoneNumber:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      emailVerifiedAt:
+        type: string
+        format: date-time
+      role:
+        type: array
+        items:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+    required:
+      - email
+      - password
+      - phoneNumber
+
+  Case:
+    type: object
+    properties:
+      _id:
+        type: string
+      status:
+        type: string
+        enum:
+          - OPEN
+          - PENDING
+          - CLOSED
+          - ABANDONED
+          - REOPENED
+      type:
+        type: string
+        enum:
+          - INJURY
+          - ABUSE
+          - CLOSED
+          - ATTACK
+          - OTHER
+      animalDetails:
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+              - CAT
+              - DOG
+              - UNKNOWN
+          name:
+            type: string
+          color:
+            type: string
+          identificationMark:
+            type: string
+          image:
+            type: string
+      description:
+        type: string
+      address:
+        type: string
+      phoneNumber:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      point:
+        $ref: '#/definitions/Point'
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/CaseHistory'
+
+  CaseHistory:
+    type: object
+    properties:
+      _id:
+        type: string
+      case:
+        $ref: '#/definitions/Case'
+      description:
+        type: string
+  TaskList:
+    type: object
+    properties:
+      _id:
+        type: string
+      tasks:
+        type: array
+        items:
+          $ref: '#/definitions/Case'
+      priorityTasks:
+        type: array
+        items:
+          $ref: '#/definitions/Case'
+
+  Ngo:
+    type: object
+    properties:
+      _id:
+        type: string
+      description:
+        type: string
+      address:
+        type: string
+      phoneNumber:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      area:
+        $ref: '#/definitions/Polygon'
+
+  Medic:
+    type: object
+    properties:
+      _id:
+        type: string
+      description:
+        type: string
+      address:
+        type: string
+      phoneNumber:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      area:
+        $ref: '#/definitions/Polygon'
+
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      type:
+        type: string
+      message:
+        type: string
+
+  Geometry:
+    type: object
+    description: GeoJSon geometry
+    discriminator: type
+    required:
+      - type
+    externalDocs:
+      url: http://geojson.org/geojson-spec.html#geometry-objects
+    properties:
+      type:
+        type: string
+        enum:
+          - Point
+          - Polygon
+        description: the geometry type
+
+  Point2D:
+    type: array
+    maxItems: 2
+    minItems: 2
+    items:
+      type: number
+
+  Point:
+    type: object
+    description: GeoJSon geometry
+    externalDocs:
+      url: http://geojson.org/geojson-spec.html#id2
+    allOf:
+      - $ref: "#/definitions/Geometry"
+      - properties:
+          coordinates:
+            $ref: '#/definitions/Point2D'
+
+  Polygon:
+    type: object
+    description:
+      GeoJSon geometry
+    externalDocs:
+      url: http://geojson.org/geojson-spec.html#id4
+    allOf:
+      - $ref: "#/definitions/Geometry"
+      - properties:
+          coordinates:
+            type: array
+            items:
+              type: array
+              items:
+                $ref: '#/definitions/Point2D'
+
+  GeometryCollection:
+    type: object
+    description:
+      GeoJSon geometry collection
+    required:
+      - type
+      - geometries
+    externalDocs:
+      url: http://geojson.org/geojson-spec.html#geometrycollection
+    properties:
+      type:
+        type: string
+        enum:
+          - GeometryCollection
+        description:
+          GeometryCollection
+      geometries:
+        type: array
+        items:
+          $ref: '#/definitions/Geometry'
