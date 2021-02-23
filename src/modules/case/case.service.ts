@@ -80,6 +80,19 @@ async function getCaseById({ id }: { id: string }) {
         if (!existingCase)
             return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
 
+        await existingCase
+            .populate({
+                path: 'history.assignedTo',
+                model: UserModel,
+                select: projection,
+            })
+            // .populate({
+            //     path: 'history.case',
+            //     model: CaseModel,
+            //     select: projection,
+            // })
+            .execPopulate()
+
         return existingCase
     } catch (error) {
         return Promise.reject(error)
