@@ -10,7 +10,7 @@ import { createCaseSchema, updateCaseSchema } from './case.validator'
 const logCases = { tags: ['BACKEND', 'CASE-CONTROLLER'] }
 
 const {
-    getCase,
+    getCaseById,
     getAllCases,
     createCase,
     deleteCase,
@@ -49,11 +49,11 @@ function getAllCasesIncludeDeletedHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
-function getCaseHandler(options): RequestHandler {
+function getCaseByIdHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
             const { id } = req.params
-            const data = await getCase({ id })
+            const data = await getCaseById({ id })
 
             res.done({ code: 200, data })
         } catch (error) {
@@ -112,7 +112,7 @@ function caseController(options: { db: typeof mongoose }) {
     router.get('/raw', getAllCasesIncludeDeletedHandler(options))
 
     /** GET */
-    router.get('/:id', validObjectId(), getCaseHandler(options))
+    router.get('/:id', validObjectId(), getCaseByIdHandler(options))
 
     /** POST */
     router.post('/', validator(createCaseSchema), createCaseHandler(options))

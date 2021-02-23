@@ -3,6 +3,9 @@ import { Document, model, Schema } from 'mongoose'
 import { PointSchema } from '../../shared/models/GeoJSONPoint'
 import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
 import { MediaCollectionName } from '../../shared/models/Media'
+import CaseHistoryModel, {
+    CaseHistoryCollectionName,
+} from '../caseHistory/caseHistory.model'
 import { NGOCollectionName, NGOSchema } from '../ngo/ngo.model'
 import { UserCollectionName } from '../users/user.model'
 
@@ -26,6 +29,7 @@ export interface CaseDocument extends Document {
     point: Record<string, any>
     addedBy: string
     assignedNgo: string
+    history: string[]
 
     deletedAt: Date | null
 }
@@ -118,13 +122,20 @@ export const CaseSchema = new Schema(
         addedBy: {
             type: Schema.Types.ObjectId,
             ref: UserCollectionName,
-            required: true,
+            required: false,
         },
         assignedNgo: {
             type: Schema.Types.ObjectId,
             ref: NGOCollectionName,
-            required: true,
+            required: false,
         },
+        history: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: CaseHistoryCollectionName,
+                required: false,
+            },
+        ],
         deletedAt: {
             type: Date,
             default: null,

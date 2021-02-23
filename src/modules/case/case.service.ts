@@ -1,6 +1,7 @@
 import { NotFound } from '../../exceptions/ApiException'
 import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
+import CaseHistoryModel from '../caseHistory/caseHistory.model'
 import NgoModel from '../ngo/ngo.model'
 import ngoService from '../ngo/ngo.service'
 import UserModel from '../users/user.model'
@@ -47,7 +48,7 @@ async function getAllCasesIncludeDeleted(query: Record<string, any>) {
 }
 
 /** Get single record by id */
-async function getCase({ id }: { id: string }) {
+async function getCaseById({ id }: { id: string }) {
     try {
         const existingCase = await CaseModel.findOne(
             {
@@ -62,9 +63,18 @@ async function getCase({ id }: { id: string }) {
             },
             projection,
         )
-            .populate({ path: 'animalDetails.image', model: MediaModel })
             .populate({ path: 'addedBy', model: UserModel, select: projection })
             .populate({ path: 'assignedNgo', model: NgoModel, select: projection })
+            .populate({
+                path: 'history',
+                model: CaseHistoryModel,
+                select: projection,
+            })
+            .populate({
+                path: 'animalDetails.image',
+                model: MediaModel,
+                select: projection,
+            })
             .exec()
 
         if (!existingCase)
@@ -211,7 +221,7 @@ async function updateCase({
 function caseService() {
     return {
         getAllCases,
-        getCase,
+        getCaseById,
         createCase,
         deleteCase,
         updateCase,

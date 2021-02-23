@@ -24,7 +24,7 @@ async function getCaseHistory({ id }: { id: string }) {
             projection,
         )
             .populate({ path: 'case', model: CaseModel, select: projection })
-            .populate({ path: 'volunteer', model: UserModel, select: projection })
+            .populate({ path: 'assignedTo', model: UserModel, select: projection })
             .exec()
 
         if (!existingCase)
@@ -63,6 +63,11 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
 
         const newCaseHistory = new CaseHistoryModel(fields)
         const savedCase = await newCaseHistory.save()
+
+        existingCase.history.push(`${savedCase._id}`)
+        existingCase.markModified('history')
+        await existingCase.save()
+
         logger.info(`Case saved: ${savedCase._id}`, logCases)
 
         const {

@@ -1,10 +1,12 @@
 import { Document, model, Schema } from 'mongoose'
 
-const CaseHistoryCollectionName = 'CaseHistory' as const
+export const CaseHistoryCollectionName = 'CaseHistory' as const
 
 export interface CaseHistoryDocument extends Document {
     _id: string
     description?: string
+    case?: string | Record<string, any>
+    assignedTo?: string | Record<string, any>
     deletedAt: Date | null
 }
 
