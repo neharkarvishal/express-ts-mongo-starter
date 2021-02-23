@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
 /** Validation Schema, please updated respected Model when updating following */
-export const createCaseSchema = Joi.object({
+export const createCaseHistorySchema = Joi.object({
     description: Joi.string().required().min(2).max(360).label('description'),
 
     case: Joi.string()
@@ -16,7 +16,7 @@ export const createCaseSchema = Joi.object({
 })
 
 /** Validation Schema, please updated respected Model when updating following */
-export const updateCaseSchema = Joi.object({
+export const updateCaseHistorySchema = Joi.object({
     description: Joi.string().optional().min(2).max(360).label('description'),
 
     case: Joi.string()

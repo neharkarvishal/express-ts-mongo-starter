@@ -5,11 +5,18 @@ import mongoose from 'mongoose'
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
 import caseHistoryService from './caseHistory.service'
-import { createCaseSchema, updateCaseSchema } from './caseHistory.validator'
+import {
+    createCaseHistorySchema,
+    updateCaseHistorySchema,
+} from './caseHistory.validator'
 
 const logCases = { tags: ['BACKEND', 'CASE-HISTORY-CONTROLLER'] }
 
-const { getCaseHistory, createCaseHistory } = caseHistoryService()
+const {
+    getCaseHistory,
+    createCaseHistory,
+    updateCaseHistory,
+} = caseHistoryService()
 
 const router = express.Router()
 
@@ -40,13 +47,39 @@ function createCaseHistoryHandler(options): RequestHandler {
     }
 }
 
+/** RequestHandler */
+function updateCaseHistoryHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const { id } = req.params
+            const data = await updateCaseHistory({ id, fields: req.body })
+
+            res.done({ data, code: 201 })
+        } catch (error) {
+            next(error)
+        }
+    }
+}
+
 /** Case Controller */
 function caseHistoryController(options: { db: typeof mongoose }) {
     /** GET */
     router.get('/:id', validObjectId(), getCaseHistoryHandler(options))
 
     /** POST */
-    router.post('/', validator(createCaseSchema), createCaseHistoryHandler(options))
+    router.post(
+        '/',
+        validator(createCaseHistorySchema),
+        createCaseHistoryHandler(options),
+    )
+
+    /** PUT */
+    router.put(
+        '/:id',
+        validObjectId(),
+        validator(updateCaseHistorySchema),
+        updateCaseHistoryHandler(options),
+    )
 
     return router
 }
