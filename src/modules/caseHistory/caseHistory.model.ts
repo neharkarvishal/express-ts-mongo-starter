@@ -21,7 +21,7 @@ export const CaseHistorySchema = new Schema(
             ref: 'Case',
             required: true,
         },
-        volunteer: {
+        assignedTo: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,

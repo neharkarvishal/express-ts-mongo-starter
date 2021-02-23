@@ -1021,6 +1021,7 @@ definitions:
         $ref: '#/definitions/Case'
       description:
         type: string
+
   TaskList:
     type: object
     properties:

@@ -9,7 +9,7 @@ export const createCaseSchema = Joi.object({
         .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
         .label('case'),
 
-    volunteer: Joi.string()
+    assignedTo: Joi.string()
         .required()
         .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
         .label('volunteer'),
@@ -24,7 +24,7 @@ export const updateCaseSchema = Joi.object({
         .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
         .label('case'),
 
-    volunteer: Joi.string()
+    assignedTo: Joi.string()
         .optional()
         .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
         .label('volunteer'),

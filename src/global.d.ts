@@ -30,3 +30,16 @@ type NonFunctionProperties<T> = {
 type PropertiesOf<T> = Pick<T, NonFunctionProperties<T>>
 type ObjectOf<T> = Pick<T, NonFunctionProperties<T>>
 type JsonOf<T> = Pick<T, NonFunctionProperties<T>>
+
+// scratch
+declare namespace API {
+    interface Case {}
+
+    interface CaseApi {
+        get: {
+            '/cases/': { getAll(): Case[] }
+            '/cases/raw': { getAllRaw(): Case[] }
+            '/cases/:id': { getOneById(): Case[] }
+        }
+    }
+}

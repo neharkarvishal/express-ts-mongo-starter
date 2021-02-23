@@ -39,6 +39,28 @@ async function getCaseHistory({ id }: { id: string }) {
 /** Create one record */
 async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
     try {
+        const [existingCase, assignedToUser] = await Promise.all([
+            CaseModel.findOne({
+                $and: [
+                    {
+                        _id: fields.case,
+                    },
+                ],
+            }).exec(),
+            UserModel.findOne({
+                $and: [
+                    {
+                        _id: fields.assignedTo,
+                    },
+                ],
+            }),
+        ])
+
+        if (!existingCase)
+            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+        if (!assignedToUser)
+            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+
         const newCaseHistory = new CaseHistoryModel(fields)
         const savedCase = await newCaseHistory.save()
         logger.info(`Case saved: ${savedCase._id}`, logCases)
