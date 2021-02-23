@@ -64,6 +64,7 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
         const newCaseHistory = new CaseHistoryModel(fields)
         const savedCase = await newCaseHistory.save()
 
+        // update history array of the case
         existingCase.history.push(`${savedCase._id}`)
         existingCase.markModified('history')
         await existingCase.save()
@@ -85,11 +86,75 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
     }
 }
 
+/** Create one record */
+async function updateCaseHistory({
+    id,
+    fields,
+}: {
+    id: string
+    fields: Record<string, any>
+}) {
+    try {
+        const caseHistory = await CaseHistoryModel.findOne({ _id: id }).exec()
+
+        if (!caseHistory)
+            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+
+        if (fields?.case) {
+            const existingCase = await CaseModel.findOne({
+                $and: [
+                    {
+                        _id: fields.case,
+                    },
+                ],
+            }).exec()
+
+            if (!existingCase)
+                return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+
+            caseHistory.case = fields.case
+            caseHistory.markModified('case')
+        }
+        if (fields?.assignedTo) {
+            const assignedToUser = await UserModel.findOne({
+                $and: [
+                    {
+                        _id: fields.assignedTo,
+                    },
+                ],
+            })
+
+            if (!assignedToUser)
+                return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+
+            caseHistory.assignedTo = fields.assignedTo
+            caseHistory.markModified('assignedTo')
+        }
+
+        const savedCase = await caseHistory.save()
+        logger.info(`Case updated: ${savedCase._id}`, logCases)
+
+        const {
+            __v,
+            createdAt,
+            // updatedAt,
+            // deletedAt,
+            ...data
+        } = savedCase.toObject()
+
+        return data
+    } catch (error) {
+        logger.error(`Case update failed`, logCases)
+        return Promise.reject(error)
+    }
+}
+
 /** Service */
 function caseHistoryService() {
     return {
         getCaseHistory,
         createCaseHistory,
+        updateCaseHistory,
     }
 }
 
