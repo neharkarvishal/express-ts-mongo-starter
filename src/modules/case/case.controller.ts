@@ -5,7 +5,11 @@ import mongoose from 'mongoose'
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
 import caseService from './case.service'
-import { createCaseSchema, updateCaseSchema } from './case.validator'
+import {
+    createCaseSchema,
+    rescheduleCaseSchema,
+    updateCaseSchema,
+} from './case.validator'
 
 const logCases = { tags: ['BACKEND', 'CASE-CONTROLLER'] }
 
@@ -103,6 +107,20 @@ function updateCaseHandler(options): RequestHandler {
     }
 }
 
+/** RequestHandler */
+function rescheduleCaseHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const { id } = req.params
+            const data = await updateCase({ id, fields: req.body })
+
+            res.done({ data })
+        } catch (error) {
+            next(error)
+        }
+    }
+}
+
 /** Case Controller */
 function caseController(options: { db: typeof mongoose }) {
     /** GET */
@@ -126,6 +144,14 @@ function caseController(options: { db: typeof mongoose }) {
         validObjectId(),
         validator(updateCaseSchema),
         updateCaseHandler(options),
+    )
+
+    /** PUT */
+    router.put(
+        '/:id',
+        validObjectId(),
+        validator(rescheduleCaseSchema),
+        rescheduleCaseHandler(options),
     )
 
     return router

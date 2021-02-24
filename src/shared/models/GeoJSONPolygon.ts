@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import { Schema } from 'mongoose'
 
 /**
  * GeoJSON polygons let you define an arbitrary shape on a map

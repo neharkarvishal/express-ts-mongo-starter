@@ -1,8 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
 
-import { PointSchema } from '../../shared/models/GeoJSONPoint'
-import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
-
 export const NGOCollectionName = 'NGO' as const
 
 export interface NGODocument extends Document {

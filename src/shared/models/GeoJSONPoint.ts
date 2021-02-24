@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import { Schema } from 'mongoose'
 
 /**
  * GeoJSON is a format for storing geographic points and polygons

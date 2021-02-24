@@ -78,7 +78,9 @@ async function getCaseById({ id }: { id: string }) {
             .exec()
 
         if (!existingCase)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+            return await Promise.reject(
+                NotFound({ caseId: 'Case does not exist.' }),
+            )
 
         await existingCase
             .populate({
@@ -108,8 +110,7 @@ async function createCase({ fields }: { fields: Record<string, any> }) {
             latitude: fields.point.coordinates[1] ?? 19.076,
         })
 
-        if (!nearByNgos.length)
-            return Promise.reject(NotFound({ message: 'No NGO found' }))
+        if (!nearByNgos.length) throw NotFound({ message: 'No NGO found' })
 
         const newCase = new CaseModel(fields)
         newCase.assignedNgo = nearByNgos[0].id
@@ -153,8 +154,7 @@ async function deleteCase({ id }: { id: string }) {
             ],
         }).exec()
 
-        if (!existingCase)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+        if (!existingCase) throw NotFound({ caseId: 'Case does not exist.' })
 
         existingCase.deletedAt = new Date()
         existingCase.markModified('deletedAt')
@@ -190,8 +190,7 @@ async function updateCase({
             _id: id,
         }).exec()
 
-        if (!existing)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+        if (!existing) throw NotFound({ caseId: 'Case does not exist.' })
 
         // updating adminalDetails
         if (fields?.animalDetails) {

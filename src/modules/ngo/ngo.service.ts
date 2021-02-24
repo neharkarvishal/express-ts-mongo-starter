@@ -84,8 +84,7 @@ async function getNGO({ id }: { id: string }) {
             .populate({ path: 'addedBy', model: UserModel, select: projection })
             .exec()
 
-        if (!existingNGO)
-            return Promise.reject(NotFound({ caseId: 'NGO does not exist.' }))
+        if (!existingNGO) throw NotFound({ caseId: 'NGO does not exist.' })
 
         return existingNGO
     } catch (error) {
@@ -129,8 +128,7 @@ async function deleteNGO({ id }: { id: string }) {
             ],
         }).exec()
 
-        if (!existingNGO)
-            return Promise.reject(NotFound({ caseId: 'NGO does not exist.' }))
+        if (!existingNGO) throw NotFound({ caseId: 'NGO does not exist.' })
 
         existingNGO.deletedAt = new Date()
         existingNGO.markModified('deletedAt')
@@ -166,8 +164,7 @@ async function updateNGO({
             _id: id,
         }).exec()
 
-        if (!existing)
-            return Promise.reject(NotFound({ caseId: 'NGO does not exist.' }))
+        if (!existing) throw NotFound({ caseId: 'NGO does not exist.' })
 
         // updating area
         if (fields?.area) {

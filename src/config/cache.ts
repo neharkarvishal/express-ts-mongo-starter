@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-return,@typescript-eslint/no-floating-promises */
-import Redis from 'ioredis'
-import { v4 as uuidv4 } from 'uuid'
-
-import { logger } from '../utils/logger'
 
 const logTags = { tags: ['FRONTEND', 'REDIS'] }
 

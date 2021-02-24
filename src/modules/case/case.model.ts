@@ -1,12 +1,8 @@
 import { Document, model, Schema } from 'mongoose'
 
-import { PointSchema } from '../../shared/models/GeoJSONPoint'
-import { PolygonSchema } from '../../shared/models/GeoJSONPolygon'
 import { MediaCollectionName } from '../../shared/models/Media'
-import CaseHistoryModel, {
-    CaseHistoryCollectionName,
-} from '../caseHistory/caseHistory.model'
-import { NGOCollectionName, NGOSchema } from '../ngo/ngo.model'
+import { CaseHistoryCollectionName } from '../caseHistory/caseHistory.model'
+import { NGOCollectionName } from '../ngo/ngo.model'
 import { UserCollectionName } from '../users/user.model'
 
 export const CaseCollectionName = 'Case' as const
@@ -124,6 +120,11 @@ export const CaseSchema = new Schema(
             ref: UserCollectionName,
             required: false,
         },
+        assignedTo: {
+            type: Schema.Types.ObjectId,
+            ref: UserCollectionName,
+            required: false,
+        },
         assignedNgo: {
             type: Schema.Types.ObjectId,
             ref: NGOCollectionName,
@@ -136,6 +137,10 @@ export const CaseSchema = new Schema(
                 required: false,
             },
         ],
+        scheduled: {
+            type: Date,
+            default: Date.now,
+        },
         deletedAt: {
             type: Date,
             default: null,

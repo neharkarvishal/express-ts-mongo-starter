@@ -134,3 +134,8 @@ export const updateCaseSchema = Joi.object({
         .optional()
         .description('Please use this format [ longitude, latitude]'),
 }).label('Cases validation schema')
+
+/** Validation Schema, please updated respected Model when updating following */
+export const rescheduleCaseSchema = Joi.object({
+    scheduled: Joi.date().iso().required(),
+}).label('Cases validation schema')

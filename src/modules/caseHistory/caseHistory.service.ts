@@ -1,5 +1,4 @@
 import { NotFound } from '../../exceptions/ApiException'
-import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
 import CaseModel from '../case/case.model'
 import UserModel from '../users/user.model'
@@ -28,7 +27,9 @@ async function getCaseHistory({ id }: { id: string }) {
             .exec()
 
         if (!existingCase)
-            return Promise.reject(NotFound({ caseId: 'History does not exist.' }))
+            return await Promise.reject(
+                NotFound({ caseId: 'History does not exist.' }),
+            )
 
         return existingCase
     } catch (error) {
@@ -57,9 +58,13 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
         ])
 
         if (!existingCase)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+            return await Promise.reject(
+                NotFound({ caseId: 'Case does not exist.' }),
+            )
         if (!assignedToUser)
-            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+            return await Promise.reject(
+                NotFound({ caseId: 'User does not exist.' }),
+            )
 
         const newCaseHistory = new CaseHistoryModel(fields)
         const savedCase = await newCaseHistory.save()
@@ -97,8 +102,7 @@ async function updateCaseHistory({
     try {
         const caseHistory = await CaseHistoryModel.findOne({ _id: id }).exec()
 
-        if (!caseHistory)
-            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+        if (!caseHistory) throw NotFound({ caseId: 'User does not exist.' })
 
         if (fields?.case) {
             const existingCase = await CaseModel.findOne({
@@ -109,8 +113,7 @@ async function updateCaseHistory({
                 ],
             }).exec()
 
-            if (!existingCase)
-                return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+            if (!existingCase) throw NotFound({ caseId: 'Case does not exist.' })
 
             caseHistory.case = fields.case
             caseHistory.markModified('case')
@@ -124,8 +127,7 @@ async function updateCaseHistory({
                 ],
             })
 
-            if (!assignedToUser)
-                return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+            if (!assignedToUser) throw NotFound({ caseId: 'User does not exist.' })
 
             caseHistory.assignedTo = fields.assignedTo
             caseHistory.markModified('assignedTo')
