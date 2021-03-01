@@ -57,14 +57,8 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
             }),
         ])
 
-        if (!existingCase)
-            return await Promise.reject(
-                NotFound({ caseId: 'Case does not exist.' }),
-            )
-        if (!assignedToUser)
-            return await Promise.reject(
-                NotFound({ caseId: 'User does not exist.' }),
-            )
+        if (!existingCase) throw NotFound({ caseId: 'Case does not exist.' })
+        if (!assignedToUser) throw NotFound({ userId: 'User does not exist.' })
 
         const newCaseHistory = new CaseHistoryModel(fields)
         const savedCase = await newCaseHistory.save()
@@ -118,6 +112,7 @@ async function updateCaseHistory({
             caseHistory.case = fields.case
             caseHistory.markModified('case')
         }
+
         if (fields?.assignedTo) {
             const assignedToUser = await UserModel.findOne({
                 $and: [
@@ -131,6 +126,11 @@ async function updateCaseHistory({
 
             caseHistory.assignedTo = fields.assignedTo
             caseHistory.markModified('assignedTo')
+        }
+
+        if (fields?.description) {
+            caseHistory.description = fields.description
+            caseHistory.markModified('description')
         }
 
         const savedCase = await caseHistory.save()

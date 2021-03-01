@@ -24,9 +24,10 @@ export interface CaseDocument extends Document {
     alternatePhoneNumber?: string
     point: Record<string, any>
     addedBy: string
+    assignedTo: string
     assignedNgo: string
     history: string[]
-
+    scheduled: string
     deletedAt: Date | null
 }
 

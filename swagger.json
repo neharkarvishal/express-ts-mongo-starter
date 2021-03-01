@@ -1,0 +1,632 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/cases": {
+      "get": {
+        "summary": "/cases",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      },
+      "post": {
+        "summary": "/cases",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      }
+    },
+    "/cases/raw": {
+      "get": {
+        "summary": "/cases/raw",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      }
+    },
+    "/cases/{id}": {
+      "get": {
+        "summary": "/cases/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      },
+      "delete": {
+        "summary": "/cases/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      },
+      "put": {
+        "summary": "/cases/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "/users",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "summary": "/users",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/raw": {
+      "get": {
+        "summary": "/users/raw",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "/users/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "User"
+        ]
+      },
+      "delete": {
+        "summary": "/users/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "summary": "/users/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/ngos": {
+      "get": {
+        "summary": "/ngos",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "NGO"
+        ]
+      },
+      "post": {
+        "summary": "/ngos",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "NGO"
+        ]
+      }
+    },
+    "/ngos/raw": {
+      "get": {
+        "summary": "/ngos/raw",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "NGO"
+        ]
+      }
+    },
+    "/ngos/{id}": {
+      "get": {
+        "summary": "/ngos/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "NGO"
+        ]
+      },
+      "delete": {
+        "summary": "/ngos/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "NGO"
+        ]
+      },
+      "put": {
+        "summary": "/ngos/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "NGO"
+        ]
+      }
+    },
+    "/cases-history/{id}": {
+      "get": {
+        "summary": "/cases-history/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      },
+      "put": {
+        "summary": "/cases-history/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      }
+    },
+    "/cases-history": {
+      "post": {
+        "summary": "/cases-history",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "Case"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Media"
+    },
+    {
+      "name": "CaseHistory"
+    },
+    {
+      "name": "NGO"
+    },
+    {
+      "name": "User"
+    },
+    {
+      "name": "Case"
+    }
+  ],
+  "definitions": {
+    "Media": {
+      "title": "Media",
+      "required": [
+        "type",
+        "url"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "IMAGE",
+            "VIDEO",
+            "SOUND",
+            "DOC"
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "required": false
+        },
+        "size": {
+          "type": "number",
+          "required": false
+        },
+        "sizeHuman": {
+          "type": "string",
+          "required": false
+        },
+        "addedBy": {
+          "type": "string",
+          "required": false
+        },
+        "referer": {
+          "type": "string"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "CaseHistory": {
+      "title": "CaseHistory",
+      "required": [
+        "description",
+        "case",
+        "assignedTo"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "case": {
+          "type": "string"
+        },
+        "assignedTo": {
+          "type": "string"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "NGO": {
+      "title": "NGO",
+      "required": [
+        "phoneNumber"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "address": {
+          "type": "string",
+          "required": false
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "alternatePhoneNumber": {
+          "type": "string",
+          "required": false
+        },
+        "area": {
+          "type": "string"
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "User": {
+      "title": "User",
+      "required": [
+        "email",
+        "password",
+        "status",
+        "roles"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "emailVerifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "NOT_ACTIVATED",
+            "ACTIVATED",
+            "DISABLED",
+            "DELETED"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ngo": {
+          "type": "string",
+          "required": false
+        },
+        "point": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "required": false
+        },
+        "alternatePhoneNumber": {
+          "type": "string",
+          "required": false
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Case": {
+      "title": "Case",
+      "required": [
+        "status",
+        "type",
+        "phoneNumber"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "PENDING",
+            "CLOSED",
+            "ABANDONED",
+            "REOPENED"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "INJURY",
+            "ABUSE",
+            "CLOSED",
+            "ATTACK",
+            "OTHER"
+          ]
+        },
+        "animalDetails": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "address": {
+          "type": "string",
+          "required": false
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "alternatePhoneNumber": {
+          "type": "string",
+          "required": false
+        },
+        "point": {
+          "type": "string"
+        },
+        "addedBy": {
+          "type": "string",
+          "required": false
+        },
+        "assignedTo": {
+          "type": "string",
+          "required": false
+        },
+        "assignedNgo": {
+          "type": "string",
+          "required": false
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "required": false
+          }
+        },
+        "scheduled": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "hline",
+    "version": "0.0.0",
+    "license": {
+      "name": "ISC"
+    },
+    "description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3).\n\nTypeScript + Mongoose + MongoDB + Express API Server"
+  }
+}

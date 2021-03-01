@@ -1,5 +1,6 @@
 import './config/env'
 
+import expressOasGenerator from 'express-oas-generator'
 import * as http from 'http'
 
 import app from './app'
@@ -19,8 +20,22 @@ Promise.all([dbPromise('app')])
             imports: db.modelNames(),
         })
 
+        /** place handleResponses as the very first middleware */
+        expressOasGenerator.handleResponses(app, {
+            predefinedSpec: (spec) => {
+                console.log({ ...spec })
+                return spec
+            },
+            specOutputPath: './swagger.json',
+            mongooseModels: db.modelNames(),
+            alwaysServeDocs: true,
+        })
+
         /** init routes */
         app.use(routes({ db }))
+
+        /** place handleRequests as the very last middleware */
+        expressOasGenerator.handleRequests()
 
         /** 404'd paths -> forward to error handler */
         app.use((req, res, next) => {

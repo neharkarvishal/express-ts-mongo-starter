@@ -2,11 +2,6 @@ import Joi from 'joi'
 
 /** Validation Schema, please updated respected Model when updating following */
 export const createCaseSchema = Joi.object({
-    addedBy: Joi.string()
-        .required()
-        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
-        .label('addedBy'),
-
     status: Joi.string()
         .optional()
         .valid('OPEN', 'PENDING', 'CLOSED', 'ABANDONED', 'REOPENED')
@@ -74,6 +69,27 @@ export const createCaseSchema = Joi.object({
         .label('point')
         .required()
         .description('Please use this format [ longitude, latitude]'),
+
+    addedBy: Joi.string()
+        .required()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('addedBy'),
+
+    assignedTo: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('assignedTo'),
+
+    assignedNgo: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('assignedNgo'),
+
+    scheduled: Joi.date().iso().optional(),
+
+    history: Joi.array()
+        .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id'))
+        .optional(),
 }).label('Cases validation schema')
 
 /** Validation Schema, please updated respected Model when updating following */
@@ -92,23 +108,23 @@ export const updateCaseSchema = Joi.object({
 
     animalDetails: Joi.object({
         type: Joi.string()
-            .optional()
+            .required()
             .valid('DOG', 'CAT', 'UNKNOWN')
             .label('Animal Type'),
 
-        name: Joi.string().min(2).max(38).optional().label('Animal Name'),
+        name: Joi.string().min(2).max(38).required().label('Animal Name'),
 
         image: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
-            .optional()
+            .required()
             .label('Media Image'),
 
-        color: Joi.string().min(2).max(38).optional().label('Animal Color'),
+        color: Joi.string().min(2).max(38).required().label('Animal Color'),
 
         identificationMark: Joi.string()
             .min(2)
             .max(60)
-            .optional()
+            .required()
             .label('Animal Identification Mark'),
     })
         .optional()
@@ -117,6 +133,18 @@ export const updateCaseSchema = Joi.object({
     description: Joi.string().optional().min(2).max(360).label('Address'),
 
     address: Joi.string().optional().min(2).max(360).label('Address'),
+
+    phoneNumber: Joi.string()
+        .length(10)
+        .pattern(/^[0-9]+$/)
+        .optional()
+        .label('Phone Number'),
+
+    alternatePhoneNumber: Joi.string()
+        .length(10)
+        .pattern(/^[0-9]+$/)
+        .optional()
+        .label('Alternate Phone Number'),
 
     /** @example { "type" : "Point", "coordinates" : [ -122.5, 37.7 ] } */
     point: Joi.object({
@@ -133,6 +161,27 @@ export const updateCaseSchema = Joi.object({
         .label('point')
         .optional()
         .description('Please use this format [ longitude, latitude]'),
+
+    addedBy: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('addedBy'),
+
+    assignedTo: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('assignedTo'),
+
+    assignedNgo: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('assignedNgo'),
+
+    scheduled: Joi.date().iso().optional(),
+
+    history: Joi.array()
+        .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id'))
+        .optional(),
 }).label('Cases validation schema')
 
 /** Validation Schema, please updated respected Model when updating following */

@@ -32,8 +32,8 @@ function getAllCasesHandler(options): RequestHandler {
             const data = await getAllCases(query)
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -46,8 +46,8 @@ function getAllCasesIncludeDeletedHandler(options): RequestHandler {
             const data = await getAllCasesIncludeDeleted(query)
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -60,8 +60,8 @@ function getCaseByIdHandler(options): RequestHandler {
             const data = await getCaseById({ id })
 
             res.done({ code: 200, data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -73,8 +73,8 @@ function createCaseHandler(options): RequestHandler {
             const data = await createCase({ fields: req.body })
 
             res.done({ data, code: 201 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -87,8 +87,8 @@ function deleteCaseHandler(options): RequestHandler {
             const data = await deleteCase({ id })
 
             res.done({ data, code: 204 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -101,8 +101,8 @@ function updateCaseHandler(options): RequestHandler {
             const data = await updateCase({ id, fields: req.body })
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -115,8 +115,8 @@ function rescheduleCaseHandler(options): RequestHandler {
             const data = await updateCase({ id, fields: req.body })
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }

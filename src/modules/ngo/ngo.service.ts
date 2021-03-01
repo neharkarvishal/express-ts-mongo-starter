@@ -50,6 +50,7 @@ async function getAllNGOs(query: Record<string, any>) {
                 maxDistance,
                 minDistance,
             })
+            .limit(3)
     } catch (error) {
         return Promise.reject(error)
     }
@@ -166,10 +167,19 @@ async function updateNGO({
 
         if (!existing) throw NotFound({ caseId: 'NGO does not exist.' })
 
-        // updating area
         if (fields?.area) {
             existing.area = fields.area
             existing.markModified('area')
+        }
+
+        if (fields?.description) {
+            existing.description = fields.description
+            existing.markModified('description')
+        }
+
+        if (fields?.address) {
+            existing.address = fields.address
+            existing.markModified('address')
         }
 
         await existing.save()

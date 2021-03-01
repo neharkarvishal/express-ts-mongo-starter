@@ -157,6 +157,31 @@ async function updateUser({
             existing.markModified('password')
         }
 
+        if (fields?.status) {
+            existing.status = fields.status
+            existing.markModified('status')
+        }
+
+        if (fields?.roles) {
+            existing.roles = [...new Set([...existing.roles, ...fields.roles])]
+            existing.markModified('roles')
+        }
+
+        if (fields?.phoneNumber) {
+            existing.phoneNumber = fields.phoneNumber
+            existing.markModified('phoneNumber')
+        }
+
+        if (fields?.alternatePhoneNumber) {
+            existing.alternatePhoneNumber = fields.alternatePhoneNumber
+            existing.markModified('alternatePhoneNumber')
+        }
+
+        if (fields?.point) {
+            existing.point = fields.point
+            existing.markModified('point')
+        }
+
         await existing.save()
         logger.info(`User updated: ${existing._id}`, logUsers)
 
