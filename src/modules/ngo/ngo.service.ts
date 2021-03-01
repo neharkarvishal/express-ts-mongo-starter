@@ -51,8 +51,8 @@ async function getAllNGOs(query: Record<string, any>) {
                 minDistance,
             })
             .limit(3)
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -60,8 +60,8 @@ async function getAllNGOs(query: Record<string, any>) {
 async function getAllNGOsIncludeDeleted(query: Record<string, any>) {
     try {
         return await NgoModel.find(query).sort({ deletedAt: 'desc' }).lean()
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -88,8 +88,8 @@ async function getNGO({ id }: { id: string }) {
         if (!existingNGO) throw NotFound({ caseId: 'NGO does not exist.' })
 
         return existingNGO
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -109,9 +109,9 @@ async function createNGO({ fields }: { fields: Record<string, any> }) {
         } = savedNGO.toObject()
 
         return data
-    } catch (error) {
+    } catch (e) {
         logger.error(`NGO create failed`, logNGOs)
-        return Promise.reject(error)
+        return Promise.reject(e)
     }
 }
 
@@ -146,9 +146,9 @@ async function deleteNGO({ id }: { id: string }) {
         } = existingNGO.toObject()
 
         return data
-    } catch (error) {
+    } catch (e) {
         logger.error(`NGO delete failed ${id}`, logNGOs)
-        return Promise.reject(error)
+        return Promise.reject(e)
     }
 }
 
@@ -194,8 +194,8 @@ async function updateNGO({
         } = existing.toObject()
 
         return data
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 

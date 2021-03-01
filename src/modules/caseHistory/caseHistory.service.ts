@@ -26,14 +26,11 @@ async function getCaseHistory({ id }: { id: string }) {
             .populate({ path: 'assignedTo', model: UserModel, select: projection })
             .exec()
 
-        if (!existingCase)
-            return await Promise.reject(
-                NotFound({ caseId: 'History does not exist.' }),
-            )
+        if (!existingCase) throw NotFound({ caseId: 'History does not exist.' })
 
         return existingCase
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -79,9 +76,9 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
         } = savedCase.toObject()
 
         return data
-    } catch (error) {
+    } catch (e) {
         logger.error(`Case create failed`, logCases)
-        return Promise.reject(error)
+        return Promise.reject(e)
     }
 }
 
@@ -145,9 +142,9 @@ async function updateCaseHistory({
         } = savedCase.toObject()
 
         return data
-    } catch (error) {
+    } catch (e) {
         logger.error(`Case update failed`, logCases)
-        return Promise.reject(error)
+        return Promise.reject(e)
     }
 }
 

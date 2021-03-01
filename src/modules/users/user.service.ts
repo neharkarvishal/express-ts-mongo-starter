@@ -29,8 +29,8 @@ async function getAllUsers(query: Record<string, any>): Promise<UserInterface[]>
             },
             projection,
         ).lean()
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -40,8 +40,8 @@ async function getAllUsersIncludeDeleted(
 ): Promise<UserInterface[]> {
     try {
         return await UserModel.find(query).sort({ deletedAt: 'desc' }).lean()
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -65,8 +65,8 @@ async function getUser({ id }: { id: string }): Promise<UserInterface> {
         if (!existingUser) throw NotFound({ caseId: 'User does not exist.' })
 
         return existingUser
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -93,9 +93,9 @@ async function createUser({
         } = savedUser.toObject()
 
         return data as UserInterface
-    } catch (error) {
+    } catch (e) {
         logger.error(`User create failed`, logUsers)
-        return Promise.reject(error)
+        return Promise.reject(e)
     }
 }
 
@@ -131,9 +131,9 @@ async function deleteUser({ id }: { id: string }): Promise<UserInterface> {
         } = existingUser.toObject()
 
         return data as UserInterface
-    } catch (error) {
+    } catch (e) {
         logger.error(`User delete failed ${id}`, logUsers)
-        return Promise.reject(error)
+        return Promise.reject(e)
     }
 }
 
@@ -195,8 +195,8 @@ async function updateUser({
         } = existing.toObject()
 
         return data
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 

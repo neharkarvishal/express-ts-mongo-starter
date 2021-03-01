@@ -33,8 +33,8 @@ async function getAllCases(query: Record<string, any>) {
             },
             projection,
         ).lean()
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -42,8 +42,8 @@ async function getAllCases(query: Record<string, any>) {
 async function getAllCasesIncludeDeleted(query: Record<string, any>) {
     try {
         return await CaseModel.find(query).sort({ deletedAt: 'desc' }).lean()
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -93,8 +93,8 @@ async function getCaseById({ id }: { id: string }) {
             .execPopulate()
 
         return existingCase
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
@@ -233,8 +233,8 @@ async function updateCase({
         } = existing.toObject()
 
         return data
-    } catch (error) {
-        return Promise.reject(error)
+    } catch (e) {
+        return Promise.reject(e)
     }
 }
 
