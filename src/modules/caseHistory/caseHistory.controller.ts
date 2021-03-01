@@ -28,8 +28,8 @@ function getCaseHistoryHandler(options): RequestHandler {
             const data = await getCaseHistory({ id })
 
             res.done({ code: 200, data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -41,8 +41,8 @@ function createCaseHistoryHandler(options): RequestHandler {
             const data = await createCaseHistory({ fields: req.body })
 
             res.done({ data, code: 201 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -55,8 +55,8 @@ function updateCaseHistoryHandler(options): RequestHandler {
             const data = await updateCaseHistory({ id, fields: req.body })
 
             res.done({ data, code: 201 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }

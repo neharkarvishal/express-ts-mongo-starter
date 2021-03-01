@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import './miscSetup'
 
-import { cleanEnv, port, str, num, host } from 'envalid'
+import { cleanEnv, host, num, port, str } from 'envalid'
 
 require('express-async-errors')
 

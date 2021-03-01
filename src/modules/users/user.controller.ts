@@ -28,8 +28,8 @@ function getAllUsersHandler(options): RequestHandler {
             const data = await getAllUsers(query)
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -42,8 +42,8 @@ function getAllUsersIncludeDeletedHandler(options): RequestHandler {
             const data = await getAllUsersIncludeDeleted(query)
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -56,8 +56,8 @@ function getUserHandler(options): RequestHandler {
             const data = await getUser({ id })
 
             res.done({ code: 200, data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -69,8 +69,8 @@ function createUserHandler(options): RequestHandler {
             const data = await createUser({ fields: req.body })
 
             res.done({ data, code: 201 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -83,8 +83,8 @@ function deleteUserHandler(options): RequestHandler {
             const data = await deleteUser({ id })
 
             res.done({ data, code: 204 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -97,8 +97,8 @@ function updateUserHandler(options): RequestHandler {
             const data = await updateUser({ id, fields: req.body })
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }

@@ -1,6 +1,6 @@
-import crypto from 'crypto'
 import { Document, model, Schema } from 'mongoose'
-import { v4 as uuidv4 } from 'uuid'
+
+import { NGOCollectionName } from '../ngo/ngo.model'
 
 export const UserCollectionName = 'User' as const
 
@@ -8,10 +8,11 @@ export interface User extends Document {
     _id: string
     email: string
     password: string
-    role: string[]
     name?: string
-    description?: string
-    address?: string
+    emailVerifiedAt: Date
+    status?: string
+    roles: string[]
+    ngo: string
     phoneNumber: string
     alternatePhoneNumber?: string
     point: Record<string, any>
@@ -50,6 +51,23 @@ export const UserSchema = new Schema(
             // enum: ['ADMIN', 'NGO_ADMIN', 'NGO_FO', 'VOLUNTEER', 'USER'],
             default: ['USER'],
             required: true,
+        },
+        ngo: {
+            type: Schema.Types.ObjectId,
+            ref: NGOCollectionName,
+            required: false,
+        },
+        point: {
+            type: {
+                type: String, // Don't do `{ location: { type: String } }`
+                enum: ['Point'], // 'location.type' must be 'Point'
+                default: 'Point',
+                required: true,
+            },
+            coordinates: {
+                type: [Number],
+                required: true,
+            },
         },
         phoneNumber: { type: String, required: false },
         alternatePhoneNumber: { type: String, required: false },

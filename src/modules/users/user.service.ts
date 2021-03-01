@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt'
 
 import { NotFound } from '../../exceptions/ApiException'
-import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
 import { UserInterface } from './user.interface'
 import UserModel from './user.model'
@@ -63,8 +62,7 @@ async function getUser({ id }: { id: string }): Promise<UserInterface> {
             projection,
         ).exec()
 
-        if (!existingUser)
-            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+        if (!existingUser) throw NotFound({ caseId: 'User does not exist.' })
 
         return existingUser
     } catch (error) {
@@ -115,8 +113,7 @@ async function deleteUser({ id }: { id: string }): Promise<UserInterface> {
             ],
         }).exec()
 
-        if (!existingUser)
-            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+        if (!existingUser) throw NotFound({ caseId: 'User does not exist.' })
 
         existingUser.deletedAt = new Date()
         existingUser.markModified('deletedAt')
@@ -153,12 +150,36 @@ async function updateUser({
             _id: id,
         }).exec()
 
-        if (!existing)
-            return Promise.reject(NotFound({ caseId: 'User does not exist.' }))
+        if (!existing) throw NotFound({ caseId: 'User does not exist.' })
 
         if (fields?.password) {
             existing.password = await bcrypt.hash(fields.password, 10)
             existing.markModified('password')
+        }
+
+        if (fields?.status) {
+            existing.status = fields.status
+            existing.markModified('status')
+        }
+
+        if (fields?.roles) {
+            existing.roles = [...new Set([...existing.roles, ...fields.roles])]
+            existing.markModified('roles')
+        }
+
+        if (fields?.phoneNumber) {
+            existing.phoneNumber = fields.phoneNumber
+            existing.markModified('phoneNumber')
+        }
+
+        if (fields?.alternatePhoneNumber) {
+            existing.alternatePhoneNumber = fields.alternatePhoneNumber
+            existing.markModified('alternatePhoneNumber')
+        }
+
+        if (fields?.point) {
+            existing.point = fields.point
+            existing.markModified('point')
         }
 
         await existing.save()

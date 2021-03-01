@@ -1,4 +1,3 @@
-import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
@@ -8,7 +7,7 @@ import morgan from 'morgan'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 
-import { logger, stream } from './utils/logger'
+import { stream } from './utils/logger'
 
 /** Response helper */
 function successResponder(
@@ -58,7 +57,7 @@ app.use((req, res, next) => {
 
 /** Setting up swagger docs */
 app.use(
-    '/api-docs',
+    '/swagger-file',
     swaggerUi.serve,
     swaggerUi.setup(
         swaggerJSDoc({

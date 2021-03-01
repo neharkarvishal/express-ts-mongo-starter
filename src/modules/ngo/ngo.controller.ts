@@ -28,8 +28,8 @@ function getAllNGOsHandler(options): RequestHandler {
             const data = await getAllNGOs(query)
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -42,8 +42,8 @@ function getAllNGOsIncludeDeletedHandler(options): RequestHandler {
             const data = await getAllNGOsIncludeDeleted(query)
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -56,8 +56,8 @@ function getNGOHandler(options): RequestHandler {
             const data = await getNGO({ id })
 
             res.done({ code: 200, data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -69,8 +69,8 @@ function createNGOHandler(options): RequestHandler {
             const data = await createNGO({ fields: req.body })
 
             res.done({ data, code: 201 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -83,8 +83,8 @@ function deleteNGOHandler(options): RequestHandler {
             const data = await deleteNGO({ id })
 
             res.done({ data, code: 204 })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }
@@ -97,8 +97,8 @@ function updateNGOHandler(options): RequestHandler {
             const data = await updateNGO({ id, fields: req.body })
 
             res.done({ data })
-        } catch (error) {
-            next(error)
+        } catch (e) {
+            return next(e)
         }
     }
 }

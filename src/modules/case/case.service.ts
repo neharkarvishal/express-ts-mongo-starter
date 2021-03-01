@@ -77,8 +77,7 @@ async function getCaseById({ id }: { id: string }) {
             })
             .exec()
 
-        if (!existingCase)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+        if (!existingCase) throw NotFound({ caseId: 'Case does not exist.' })
 
         await existingCase
             .populate({
@@ -108,8 +107,7 @@ async function createCase({ fields }: { fields: Record<string, any> }) {
             latitude: fields.point.coordinates[1] ?? 19.076,
         })
 
-        if (!nearByNgos.length)
-            return Promise.reject(NotFound({ message: 'No NGO found' }))
+        if (!nearByNgos.length) throw NotFound({ message: 'No NGO found' })
 
         const newCase = new CaseModel(fields)
         newCase.assignedNgo = nearByNgos[0].id
@@ -153,8 +151,7 @@ async function deleteCase({ id }: { id: string }) {
             ],
         }).exec()
 
-        if (!existingCase)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+        if (!existingCase) throw NotFound({ caseId: 'Case does not exist.' })
 
         existingCase.deletedAt = new Date()
         existingCase.markModified('deletedAt')
@@ -190,10 +187,18 @@ async function updateCase({
             _id: id,
         }).exec()
 
-        if (!existing)
-            return Promise.reject(NotFound({ caseId: 'Case does not exist.' }))
+        if (!existing) throw NotFound({ caseId: 'Case does not exist.' })
 
-        // updating adminalDetails
+        if (fields?.status) {
+            existing.status = fields.status
+            existing.markModified('status')
+        }
+
+        if (fields?.type) {
+            existing.type = fields.type
+            existing.markModified('type')
+        }
+
         if (fields?.animalDetails) {
             if (fields.animalDetails?.type)
                 existing.animalDetails.type = fields.animalDetails.type
@@ -201,13 +206,16 @@ async function updateCase({
             existing.markModified('animalDetails')
         }
 
-        // updating status
-        if (fields?.status) {
-            existing.status = fields.status
-            existing.markModified('status')
+        if (fields?.description) {
+            existing.description = fields.description
+            existing.markModified('description')
         }
 
-        // updating point(location)
+        if (fields?.address) {
+            existing.address = fields.address
+            existing.markModified('address')
+        }
+
         if (fields?.point) {
             existing.point = fields.point
             existing.markModified('point')
