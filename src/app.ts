@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 
 /** Setting up swagger docs */
 app.use(
-    '/swagger-file',
+    '/docs/file',
     swaggerUi.serve,
     swaggerUi.setup(
         swaggerJSDoc({

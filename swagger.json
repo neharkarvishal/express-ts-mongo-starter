@@ -10,7 +10,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "Case"
+          "cases"
         ]
       },
       "post": {
@@ -21,7 +21,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "Case"
+          "cases"
         ]
       }
     },
@@ -34,7 +34,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "Case"
+          "cases"
         ]
       }
     },
@@ -53,7 +53,7 @@
         ],
         "responses": {},
         "tags": [
-          "Case"
+          "cases"
         ]
       },
       "delete": {
@@ -70,7 +70,7 @@
         ],
         "responses": {},
         "tags": [
-          "Case"
+          "cases"
         ]
       },
       "put": {
@@ -87,7 +87,7 @@
         ],
         "responses": {},
         "tags": [
-          "Case"
+          "cases"
         ]
       }
     },
@@ -100,7 +100,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "User"
+          "users"
         ]
       },
       "post": {
@@ -111,7 +111,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "User"
+          "users"
         ]
       }
     },
@@ -124,7 +124,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "User"
+          "users"
         ]
       }
     },
@@ -143,7 +143,7 @@
         ],
         "responses": {},
         "tags": [
-          "User"
+          "users"
         ]
       },
       "delete": {
@@ -160,7 +160,7 @@
         ],
         "responses": {},
         "tags": [
-          "User"
+          "users"
         ]
       },
       "put": {
@@ -177,7 +177,7 @@
         ],
         "responses": {},
         "tags": [
-          "User"
+          "users"
         ]
       }
     },
@@ -190,7 +190,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "NGO"
+          "ngo"
         ]
       },
       "post": {
@@ -201,7 +201,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "NGO"
+          "ngo"
         ]
       }
     },
@@ -214,7 +214,7 @@
         "parameters": [],
         "responses": {},
         "tags": [
-          "NGO"
+          "ngo"
         ]
       }
     },
@@ -233,7 +233,7 @@
         ],
         "responses": {},
         "tags": [
-          "NGO"
+          "ngo"
         ]
       },
       "delete": {
@@ -250,7 +250,7 @@
         ],
         "responses": {},
         "tags": [
-          "NGO"
+          "ngo"
         ]
       },
       "put": {
@@ -267,13 +267,13 @@
         ],
         "responses": {},
         "tags": [
-          "NGO"
+          "ngo"
         ]
       }
     },
-    "/cases-history/{id}": {
+    "/case-history/{id}": {
       "get": {
-        "summary": "/cases-history/{id}",
+        "summary": "/case-history/{id}",
         "consumes": [
           "application/json"
         ],
@@ -286,11 +286,11 @@
         ],
         "responses": {},
         "tags": [
-          "Case"
+          "case-history"
         ]
       },
       "put": {
-        "summary": "/cases-history/{id}",
+        "summary": "/case-history/{id}",
         "consumes": [
           "application/json"
         ],
@@ -303,39 +303,36 @@
         ],
         "responses": {},
         "tags": [
-          "Case"
+          "case-history"
         ]
       }
     },
-    "/cases-history": {
+    "/case-history": {
       "post": {
-        "summary": "/cases-history",
+        "summary": "/case-history",
         "consumes": [
           "application/json"
         ],
         "parameters": [],
         "responses": {},
         "tags": [
-          "Case"
+          "case-history"
         ]
       }
     }
   },
   "tags": [
     {
-      "name": "Media"
+      "name": "cases"
     },
     {
-      "name": "CaseHistory"
+      "name": "ngo"
     },
     {
-      "name": "NGO"
+      "name": "case-history"
     },
     {
-      "name": "User"
-    },
-    {
-      "name": "Case"
+      "name": "users"
     }
   ],
   "definitions": {

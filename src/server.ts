@@ -5,7 +5,6 @@ import * as http from 'http'
 
 import app from './app'
 import dbPromise from './config/database'
-import getModels from './database/models'
 import ApiException, { NotFound } from './exceptions/ApiException'
 import routes from './routes'
 import { logger } from './utils/logger'
@@ -15,20 +14,16 @@ Promise.all([dbPromise('app')])
         /** dependencies */
         const [db] = dependencies
 
-        console.log('models loaded', {
-            models: getModels(),
-            imports: db.modelNames(),
-        })
-
         /** place handleResponses as the very first middleware */
         expressOasGenerator.handleResponses(app, {
+            swaggerUiServePath: 'docs/autogen',
             predefinedSpec: (spec) => {
-                console.log({ ...spec })
+                logger.info('SWAGGER DOCS LOADED FORM ROUTES', spec)
                 return spec
             },
             specOutputPath: './swagger.json',
             mongooseModels: db.modelNames(),
-            alwaysServeDocs: true,
+            tags: ['cases', 'ngo', 'case-history', 'users'],
         })
 
         /** init routes */
