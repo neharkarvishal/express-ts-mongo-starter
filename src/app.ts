@@ -1,7 +1,6 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-import fastJson from 'fast-json-stringify'
 import helmet from 'helmet'
 import hpp from 'hpp'
 import morgan from 'morgan'
@@ -19,34 +18,17 @@ function successResponder(
         code?: number
         message?: string
         status?: 'success' | 'error'
-        useJsonStringify?: boolean
     },
 ): void {
-    const {
-        data,
-        message = 'OK',
-        code = 200,
-        paging,
-        status = 'success',
-        useJsonStringify = false,
-    } = options
+    const { data, message = 'OK', code = 200, paging, status = 'success' } = options
 
-    let out = {}
-
-    out = {
+    // `this` refers to the bonded `res` object
+    this.status(code).json({
         data,
         status,
         paging,
         message,
-    }
-
-    if (useJsonStringify) {
-        // `this` refers to the bonded `res` object
-        this.status(code).json(out)
-    } else {
-        this.setHeader('Content-Type', 'application/json')
-        this.end(fastJson(out))
-    }
+    })
 }
 
 /** initialize your `app` with routes from Modules */

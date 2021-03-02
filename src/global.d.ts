@@ -10,7 +10,6 @@ declare namespace Express {
             code?: 200 | number
             message?: string
             status?: 'success' | 'error'
-            useJsonStringify?: boolean
         })
     }
 }
