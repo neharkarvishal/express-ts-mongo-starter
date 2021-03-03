@@ -38,6 +38,7 @@ const errorMiddleware = (
         logger.error(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `StatusCode : ${status}, Message : ${message} \n${
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 stack ?? 'NO STACKTRACE'
             }`,
         )

@@ -6,13 +6,14 @@ import { NotFound } from '../exceptions/ApiException'
 const { ObjectId } = mongoose.Types
 
 const validObjectId = (key = 'id', error = NotFound): RequestHandler => {
-    return (req, res, next) => {
-        if (!ObjectId.isValid(req.params[key])) {
-            next(error())
-            return
-        }
+    return async (req, res, next) => {
+        try {
+            if (!ObjectId.isValid(req.params[key])) throw error()
 
-        next()
+            return next()
+        } catch (e) {
+            return next(e)
+        }
     }
 }
 

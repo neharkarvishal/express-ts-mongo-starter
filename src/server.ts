@@ -23,7 +23,7 @@ Promise.all([dbPromise('app')])
             },
             specOutputPath: './swagger.json',
             mongooseModels: db.modelNames(),
-            tags: ['cases', 'ngo', 'case-history', 'users'],
+            tags: ['cases', 'ngo', 'case-history', 'users', 'auth'],
         })
 
         /** init routes */

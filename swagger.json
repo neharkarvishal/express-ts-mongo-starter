@@ -91,6 +91,109 @@
         ]
       }
     },
+    "/auth": {
+      "get": {
+        "summary": "/auth",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      },
+      "post": {
+        "summary": "/auth",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/raw": {
+      "get": {
+        "summary": "/auth/raw",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/{id}": {
+      "get": {
+        "summary": "/auth/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      },
+      "delete": {
+        "summary": "/auth/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      },
+      "put": {
+        "summary": "/auth/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "/auth/login",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/users": {
       "get": {
         "summary": "/users",
@@ -175,6 +278,19 @@
             "required": true
           }
         ],
+        "responses": {},
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "/users/login",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
         "responses": {},
         "tags": [
           "users"
@@ -333,6 +449,9 @@
     },
     {
       "name": "users"
+    },
+    {
+      "name": "auth"
     }
   ],
   "definitions": {

@@ -17,16 +17,22 @@ const validator = (
     valueFrom: 'body' | 'query' | 'params' = 'body',
 ): RequestHandler => {
     return (req, res, next) => {
-        const validation = schema.validate(req[valueFrom], {
-            abortEarly: false,
-            allowUnknown: false,
-            errors: { wrap: { label: '' } },
-        })
+        try {
+            if (!Joi.isSchema(schema)) throw new Error('Invalid Joi schema')
 
-        if (validation.error)
-            return next(BadRequest(getFormattedErrorMessages(validation.error)))
+            const validation = schema.validate(req[valueFrom], {
+                abortEarly: false,
+                allowUnknown: false,
+                errors: { wrap: { label: '' } },
+            })
 
-        return next()
+            if (validation.error)
+                return next(BadRequest(getFormattedErrorMessages(validation.error)))
+
+            return next()
+        } catch (e) {
+            return next(e)
+        }
     }
 }
 

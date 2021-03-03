@@ -10,6 +10,7 @@ const router = Router()
 
 const routes = (options: { db: typeof mongoose }) => {
     router.use('/cases', caseController(options))
+    // router.use('/auth', userController(options))
     router.use('/users', userController(options))
     router.use('/ngos', ngoController(options))
     router.use('/case-history', caseHistoryController(options))

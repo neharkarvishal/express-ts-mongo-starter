@@ -1,58 +1,33 @@
-import { NextFunction, Response } from 'express'
+import { NextFunction, Response, Request, RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 
-import ApiException from '../exceptions/ApiException'
-import { DataStoredInToken, RequestWithUser } from '../modules/auth/auth.interface'
-import UserModel from '../modules/users/users.model'
+import ApiException, { NotFound, Unauthorized } from '../exceptions/ApiException'
 
-const authMiddleware = async (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction,
-) => {
-    try {
-        const { cookies } = req
+const secret = process.env.JWT_SECRET ?? 'JWT_SECRET'
 
-        if (cookies && cookies.Authorization) {
-            const secret = process.env.JWT_SECRET
+const authMiddleware = (): RequestHandler => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            /** Check Authorization token present */
+            if (!req.headers.authorization) throw Unauthorized()
 
-            // eslint-disable-next-line @typescript-eslint/await-thenable
-            const verificationResponse = (await jwt.verify(
-                cookies.Authorization, // @ts-ignore
-                secret,
-            )) as DataStoredInToken
+            /** token format -> Bearer {TOKEN} */
+            const [scheme, token] = req.headers.authorization.split(' ')
+            if (scheme !== 'Bearer' || !token) throw Unauthorized()
 
-            const userId = verificationResponse._id
-            const findUser = await UserModel.findById(userId)
+            /** verify async-ly */
+            jwt.verify(token, secret, {}, (err, user) => {
+                if (err) throw Unauthorized()
 
-            if (findUser) {
+                /** make this available to next routes */
                 // @ts-ignore
-                req.user = findUser
+                req.user = user
 
                 return next()
-            }
-
-            return next(
-                new ApiException({
-                    message: 'Wrong authentication token',
-                    status: 401,
-                }),
-            )
+            })
+        } catch (e) {
+            return next(e)
         }
-
-        return next(
-            new ApiException({
-                message: 'Authentication token missing',
-                status: 404,
-            }),
-        )
-    } catch (error) {
-        return next(
-            new ApiException({
-                message: 'Wrong authentication token',
-                status: 401,
-            }),
-        )
     }
 }
 

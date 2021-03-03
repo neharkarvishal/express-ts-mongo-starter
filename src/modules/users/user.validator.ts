@@ -52,6 +52,13 @@ export const createUserSchema = Joi.object({
 }).label('Users validation schema')
 
 /** Validation Schema, please updated respected Model when updating following */
+export const loginUserSchema = Joi.object({
+    email: Joi.string().email().required().label('Email'),
+
+    password: Joi.string().required().min(8).max(360).label('Password'),
+}).label('Users validation schema')
+
+/** Validation Schema, please updated respected Model when updating following */
 export const updateUserSchema = Joi.object({
     password: Joi.string().optional().min(8).max(360).label('Password'),
 

@@ -2,10 +2,15 @@
 import express, { RequestHandler } from 'express'
 import mongoose from 'mongoose'
 
+import authMiddleware from '../../middlewares/auth.middleware'
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
 import userService from './user.service'
-import { createUserSchema, updateUserSchema } from './user.validator'
+import {
+    createUserSchema,
+    updateUserSchema,
+    loginUserSchema,
+} from './user.validator'
 
 const logUsers = { tags: ['BACKEND', 'USER-CONTROLLER'] }
 
@@ -16,6 +21,7 @@ const {
     deleteUser,
     updateUser,
     getAllUsersIncludeDeleted,
+    loginUser,
 } = userService()
 
 const router = express.Router()
@@ -76,6 +82,19 @@ function createUserHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
+function loginUserHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const data = await loginUser({ fields: req.body })
+
+            res.done({ data, code: 201 })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
+/** RequestHandler */
 function deleteUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
@@ -106,10 +125,10 @@ function updateUserHandler(options): RequestHandler {
 /** User Controller */
 function userController(options: { db: typeof mongoose }) {
     /** GET */
-    router.get('/', getAllUsersHandler(options))
+    router.get('/', authMiddleware(), getAllUsersHandler(options))
 
     /** GET */
-    router.get('/raw', getAllUsersIncludeDeletedHandler(options))
+    router.get('/raw', authMiddleware(), getAllUsersIncludeDeletedHandler(options))
 
     /** GET */
     router.get('/:id', validObjectId(), getUserHandler(options))
@@ -117,12 +136,21 @@ function userController(options: { db: typeof mongoose }) {
     /** POST */
     router.post('/', validator(createUserSchema), createUserHandler(options))
 
+    /** POST */
+    router.post('/login', validator(loginUserSchema), loginUserHandler(options))
+
     /** DELETE */
-    router.delete('/:id', validObjectId(), deleteUserHandler(options))
+    router.delete(
+        '/:id',
+        authMiddleware(),
+        validObjectId(),
+        deleteUserHandler(options),
+    )
 
     /** PUT */
     router.put(
         '/:id',
+        authMiddleware(),
         validObjectId(),
         validator(updateUserSchema),
         updateUserHandler(options),
