@@ -1,4 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
+import autoPopulate from 'mongoose-autopopulate'
 
 import { MediaCollectionName } from '../../shared/models/Media'
 import { CaseHistoryCollectionName } from '../caseHistory/caseHistory.model'
@@ -154,6 +155,8 @@ export const CaseSchema = new Schema(
 )
 
 CaseSchema.index({ point: '2dsphere' })
+
+CaseSchema.plugin(autoPopulate)
 
 const CaseModel = model<CaseDocument>(CaseCollectionName, CaseSchema)
 

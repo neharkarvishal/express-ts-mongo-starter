@@ -1,4 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
+import autoPopulate from 'mongoose-autopopulate'
 
 export const NGOCollectionName = 'NGO' as const
 
@@ -61,6 +62,8 @@ export const NGOSchema = new Schema(
 )
 
 NGOSchema.index({ area: '2dsphere' })
+
+NGOSchema.plugin(autoPopulate)
 
 const NgoModel = model<NGODocument>(NGOCollectionName, NGOSchema)
 

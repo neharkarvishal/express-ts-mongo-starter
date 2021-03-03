@@ -1,4 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
+import autoPopulate from 'mongoose-autopopulate'
 
 import { NGOCollectionName } from '../ngo/ngo.model'
 
@@ -52,6 +53,7 @@ export const UserSchema = new Schema(
             // enum: ['ADMIN', 'NGO_ADMIN', 'NGO_FO', 'VOLUNTEER', 'USER'],
             default: ['USER'],
             required: true,
+            set: (r: string[]) => r.sort(),
         },
         ngo: {
             type: Schema.Types.ObjectId,
@@ -82,6 +84,8 @@ export const UserSchema = new Schema(
         optimisticConcurrency: true,
     },
 )
+
+UserSchema.plugin(autoPopulate)
 
 const UserModel = model<User>(UserCollectionName, UserSchema)
 

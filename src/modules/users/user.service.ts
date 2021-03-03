@@ -76,6 +76,9 @@ async function getUser({ id }: { id: string }) {
 /** Create one record */
 async function createUser({ fields }: { fields: Record<string, any> }) {
     try {
+        if (fields?.roles && fields?.roles.length)
+            fields.roles = [...new Set([...fields.roles])] // eslint-disable-line no-param-reassign
+
         fields.password = await bcrypt.hash(fields.password, 10) // eslint-disable-line no-param-reassign
         const newUser = new UserModel(fields)
 

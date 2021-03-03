@@ -18,7 +18,7 @@ Promise.all([dbPromise('app')])
         expressOasGenerator.handleResponses(app, {
             swaggerUiServePath: 'docs/autogen',
             predefinedSpec: (spec) => {
-                logger.info('SWAGGER DOCS LOADED FORM ROUTES', spec)
+                logger.info('Swagger Docs Loaded Form Routes' /* , spec */)
                 return spec
             },
             specOutputPath: './swagger.json',
@@ -90,6 +90,7 @@ Promise.all([dbPromise('app')])
         const port = process.env.PORT || 3000
 
         server.listen(port)
+
         server.on('error', (error) => {
             // @ts-ignore
             if (error?.syscall !== 'listen') {

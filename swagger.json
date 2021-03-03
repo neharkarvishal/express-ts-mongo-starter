@@ -91,109 +91,6 @@
         ]
       }
     },
-    "/auth": {
-      "get": {
-        "summary": "/auth",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      },
-      "post": {
-        "summary": "/auth",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      }
-    },
-    "/auth/raw": {
-      "get": {
-        "summary": "/auth/raw",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      }
-    },
-    "/auth/{id}": {
-      "get": {
-        "summary": "/auth/{id}",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      },
-      "delete": {
-        "summary": "/auth/{id}",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      },
-      "put": {
-        "summary": "/auth/{id}",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "summary": "/auth/login",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {},
-        "tags": [
-          "auth"
-        ]
-      }
-    },
     "/users": {
       "get": {
         "summary": "/users",
@@ -506,36 +403,6 @@
         }
       }
     },
-    "CaseHistory": {
-      "title": "CaseHistory",
-      "required": [
-        "description",
-        "case",
-        "assignedTo"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "case": {
-          "type": "string"
-        },
-        "assignedTo": {
-          "type": "string"
-        },
-        "_id": {
-          "type": "string"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "NGO": {
       "title": "NGO",
       "required": [
@@ -633,6 +500,36 @@
         "deletedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "CaseHistory": {
+      "title": "CaseHistory",
+      "required": [
+        "description",
+        "case",
+        "assignedTo"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "case": {
+          "type": "string"
+        },
+        "assignedTo": {
+          "type": "string"
         },
         "_id": {
           "type": "string"

@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
+import mongoSanitize from 'express-mongo-sanitize'
 import helmet from 'helmet'
 import hpp from 'hpp'
 import morgan from 'morgan'
@@ -37,12 +38,13 @@ const app = express()
 /** Setting up loggers and middlewares */
 app.use(
     morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev', { stream }),
+    express.json(),
+    express.urlencoded({ extended: false }),
     cors(),
     cookieParser(),
     hpp(),
     helmet(),
-    express.json(),
-    express.urlencoded({ extended: false }),
+    mongoSanitize({ replaceWith: '_' }),
 )
 
 /** Setting up express configs */

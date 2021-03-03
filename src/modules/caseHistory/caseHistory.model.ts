@@ -1,4 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
+import autoPopulate from 'mongoose-autopopulate'
 
 export const CaseHistoryCollectionName = 'CaseHistory' as const
 
@@ -34,6 +35,8 @@ export const CaseHistorySchema = new Schema(
         optimisticConcurrency: true,
     },
 )
+
+CaseHistorySchema.plugin(autoPopulate)
 
 const CaseHistoryModel = model<CaseHistoryDocument>(
     CaseHistoryCollectionName,

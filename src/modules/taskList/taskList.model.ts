@@ -1,4 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
+import autoPopulate from 'mongoose-autopopulate'
 
 export const TaskListCollectionName = 'TaskList' as const
 
@@ -39,6 +40,8 @@ export const TaskListSchema = new Schema(
         optimisticConcurrency: true,
     },
 )
+
+TaskListSchema.plugin(autoPopulate)
 
 const TaskListModel = model<TaskListDocument>(
     TaskListCollectionName,

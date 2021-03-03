@@ -1,16 +1,30 @@
 import Joi from 'joi'
 
 /** Validation Schema, please updated respected Model when updating following */
+export const loginUserSchema = Joi.object({
+    email: Joi.string().email().required().label('Email'),
+
+    password: Joi.string().required().min(8).max(360).label('Password'),
+}).label('Users validation schema')
+
+/** Validation Schema, please updated respected Model when updating following */
 export const createUserSchema = Joi.object({
     email: Joi.string().email().required().label('Email'),
 
     password: Joi.string().required().min(8).max(360).label('Password'),
 
+    name: Joi.string().optional().min(2).max(360).label('Name'),
+
+    ngo: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('Ngo'),
+
     status: Joi.string()
         .optional()
         .valid('NOT_ACTIVATED', 'ACTIVATED', 'DISABLED', 'DELETED')
         .default('NOT_ACTIVATED')
-        .label('User Status'),
+        .label('Status'),
 
     roles: Joi.array()
         .items(
@@ -20,7 +34,7 @@ export const createUserSchema = Joi.object({
         )
         .min(1)
         .optional()
-        .label('User Type'),
+        .label('User Roles'),
 
     phoneNumber: Joi.string()
         .length(10)
@@ -46,16 +60,9 @@ export const createUserSchema = Joi.object({
             )
             .label('coordinates'),
     })
-        .label('point')
+        .label('Point')
         .optional()
         .description('Please use this format [ longitude, latitude]'),
-}).label('Users validation schema')
-
-/** Validation Schema, please updated respected Model when updating following */
-export const loginUserSchema = Joi.object({
-    email: Joi.string().email().required().label('Email'),
-
-    password: Joi.string().required().min(8).max(360).label('Password'),
 }).label('Users validation schema')
 
 /** Validation Schema, please updated respected Model when updating following */
@@ -68,6 +75,13 @@ export const updateUserSchema = Joi.object({
         .default('NOT_ACTIVATED')
         .label('User Status'),
 
+    name: Joi.string().optional().min(2).max(360).label('Name'),
+
+    ngo: Joi.string()
+        .optional()
+        .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
+        .label('Ngo'),
+
     roles: Joi.array()
         .items(
             Joi.string()
@@ -75,7 +89,7 @@ export const updateUserSchema = Joi.object({
                 .valid('ADMIN', 'NGO_ADMIN', 'NGO_FO', 'VOLUNTEER', 'USER'),
         )
         .optional()
-        .label('User Type'),
+        .label('User Roles'),
 
     phoneNumber: Joi.string()
         .length(10)
@@ -101,7 +115,7 @@ export const updateUserSchema = Joi.object({
             )
             .label('coordinates'),
     })
-        .label('point')
+        .label('Point')
         .optional()
         .description('Please use this format [ longitude, latitude]'),
 }).label('Users validation schema')
