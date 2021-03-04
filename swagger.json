@@ -403,6 +403,36 @@
         }
       }
     },
+    "CaseHistory": {
+      "title": "CaseHistory",
+      "required": [
+        "description",
+        "case",
+        "assignedTo"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "case": {
+          "type": "string"
+        },
+        "assignedTo": {
+          "type": "string"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "NGO": {
       "title": "NGO",
       "required": [
@@ -500,36 +530,6 @@
         "deletedAt": {
           "type": "string",
           "format": "date-time"
-        },
-        "_id": {
-          "type": "string"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "CaseHistory": {
-      "title": "CaseHistory",
-      "required": [
-        "description",
-        "case",
-        "assignedTo"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "case": {
-          "type": "string"
-        },
-        "assignedTo": {
-          "type": "string"
         },
         "_id": {
           "type": "string"

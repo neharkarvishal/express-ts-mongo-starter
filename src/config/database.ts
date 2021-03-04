@@ -1,6 +1,6 @@
 import mongoose, { ConnectionOptions } from 'mongoose'
 
-import { logger } from '../utils/logger'
+import { addMongoWinstonTransport, logger } from '../utils/logger'
 
 const { MONGO_HOST, MONGO_PORT, MONGO_DATABASE } = process.env
 
@@ -68,6 +68,12 @@ export default async (type = 'app') => {
         return await mongoose
             .connect(dbConnection.url, dbConnection.options)
             .then((m) => {
+                addMongoWinstonTransport({
+                    db: dbConnection.url,
+                    // db: m.connection.db,
+                    decolorize: true,
+                })
+
                 m.connection.on('error', (err) => {
                     logger.error(err, { tags: TAGS })
                 })
@@ -89,6 +95,7 @@ export default async (type = 'app') => {
                 logger.info('[DB] mongodb connection, database is connected', {
                     tags: TAGS,
                 })
+
                 return m
             })
     } catch (e) {
