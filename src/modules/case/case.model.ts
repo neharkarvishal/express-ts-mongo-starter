@@ -1,9 +1,9 @@
 import { Document, model, Schema } from 'mongoose'
 import autoPopulate from 'mongoose-autopopulate'
 
-import { MediaCollectionName } from '../../shared/models/Media'
 import { CaseHistoryCollectionName } from '../caseHistory/caseHistory.model'
 import { NGOCollectionName } from '../ngo/ngo.model'
+import { UploadCollectionName } from '../upload/upload.model'
 import { UserCollectionName } from '../users/user.model'
 
 export const CaseCollectionName = 'Case' as const
@@ -79,7 +79,7 @@ export const CaseSchema = new Schema(
             },
             image: {
                 type: Schema.Types.ObjectId,
-                ref: MediaCollectionName,
+                ref: UploadCollectionName,
                 required: false,
             },
         },

@@ -1,12 +1,12 @@
 import { Document, model, Schema } from 'mongoose'
 
-export const MediaCollectionName = 'Media' as const
+export const UploadCollectionName = 'Upload' as const
 
-interface MediaDocument extends Document {
+export interface UploadDocument extends Document {
     _id: string
 }
 
-export const MediaSchema = new Schema(
+export const UploadSchema = new Schema(
     {
         type: {
             type: String,
@@ -52,6 +52,6 @@ export const MediaSchema = new Schema(
     },
 )
 
-const MediaModel = model<MediaDocument>(MediaCollectionName, MediaSchema)
+const UploadModel = model<UploadDocument>(UploadCollectionName, UploadSchema)
 
-export default MediaModel
+export default UploadModel

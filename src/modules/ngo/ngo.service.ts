@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { NotFound } from '../../exceptions/ApiException'
-import MediaModel from '../../shared/models/Media'
 import { logger } from '../../utils/logger'
+import MediaModel from '../upload/upload.model'
 import UserModel from '../users/user.model'
 import NgoModel from './ngo.model'
 
