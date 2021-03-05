@@ -1,6 +1,49 @@
 {
   "swagger": "2.0",
   "paths": {
+    "/upload/{id}": {
+      "get": {
+        "summary": "/upload/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      },
+      "put": {
+        "summary": "/upload/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/upload": {
+      "post": {
+        "summary": "/upload",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
     "/cases": {
       "get": {
         "summary": "/cases",
@@ -352,57 +395,6 @@
     }
   ],
   "definitions": {
-    "Media": {
-      "title": "Media",
-      "required": [
-        "type",
-        "url"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "IMAGE",
-            "VIDEO",
-            "SOUND",
-            "DOC"
-          ]
-        },
-        "url": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string",
-          "required": false
-        },
-        "size": {
-          "type": "number",
-          "required": false
-        },
-        "sizeHuman": {
-          "type": "string",
-          "required": false
-        },
-        "addedBy": {
-          "type": "string",
-          "required": false
-        },
-        "referer": {
-          "type": "string"
-        },
-        "_id": {
-          "type": "string"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "CaseHistory": {
       "title": "CaseHistory",
       "required": [
@@ -460,6 +452,57 @@
         "deletedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Upload": {
+      "title": "Upload",
+      "required": [
+        "type",
+        "url"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "IMAGE",
+            "VIDEO",
+            "SOUND",
+            "DOC"
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "required": false
+        },
+        "size": {
+          "type": "number",
+          "required": false
+        },
+        "sizeHuman": {
+          "type": "string",
+          "required": false
+        },
+        "addedBy": {
+          "type": "string",
+          "required": false
+        },
+        "referer": {
+          "type": "string"
         },
         "_id": {
           "type": "string"

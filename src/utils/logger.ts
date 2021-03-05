@@ -51,6 +51,7 @@ if (process.env.NODE_ENV !== 'production')
 const addMongoWinstonTransport = (options) =>
     logger.add(new winston.transports.MongoDB(options))
 
+/** Morgan stream for HTTP Logger */
 const stream = {
     write: (message: string) => {
         logger.info(message.substring(0, message.lastIndexOf('\n')))
