@@ -48,7 +48,7 @@ async function getAllCasesIncludeDeleted(query: Record<string, any>) {
 }
 
 /** Get single record by id */
-async function getCaseById({ id }: { id: string }) {
+async function getCaseById({ id }: { readonly id: string }) {
     try {
         const existingCase = await CaseModel.findOne(
             {
@@ -138,7 +138,7 @@ async function createCase({ fields }: { fields: Record<string, any> }) {
 }
 
 /** Delete one record */
-async function deleteCase({ id }: { id: string }) {
+async function deleteCase({ id }: { readonly id: string }) {
     try {
         const existingCase = await CaseModel.findOne({
             $and: [
@@ -179,7 +179,7 @@ async function updateCase({
     id,
     fields,
 }: {
-    id: string
+    readonly id: string
     fields: Record<string, any>
 }) {
     try {

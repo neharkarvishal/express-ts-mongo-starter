@@ -2,6 +2,7 @@
 import express, { RequestHandler } from 'express'
 import mongoose from 'mongoose'
 
+import authMiddleware from '../../middlewares/auth.middleware'
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
 import ngoService from './ngo.service'
@@ -103,6 +104,20 @@ function updateNGOHandler(options): RequestHandler {
     }
 }
 
+/** RequestHandler */
+function verifyNGOHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const { id } = req.params
+            const data = await updateNGO({ id, fields: { verifiedAt: new Date() } })
+
+            res.done({ data })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
 /** NGO Controller */
 function ngoController(options: { db: typeof mongoose }) {
     /** GET */
@@ -126,6 +141,14 @@ function ngoController(options: { db: typeof mongoose }) {
         validObjectId(),
         validator(updateNGOSchema),
         updateNGOHandler(options),
+    )
+
+    /** PUT */
+    router.put(
+        '/:id/verify',
+        validObjectId(),
+        authMiddleware({ role: 'ADMIN' }),
+        verifyNGOHandler(options),
     )
 
     return router

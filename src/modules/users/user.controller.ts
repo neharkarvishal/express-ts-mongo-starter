@@ -2,6 +2,7 @@
 import express, { RequestHandler } from 'express'
 import mongoose from 'mongoose'
 
+import { NotFound } from '../../exceptions/ApiException'
 import authMiddleware from '../../middlewares/auth.middleware'
 import validObjectId from '../../middlewares/objectId.validator.middleware'
 import validator from '../../middlewares/validator.middleware'
@@ -98,7 +99,10 @@ function loginUserHandler(options): RequestHandler {
 function deleteUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const { id } = req.params
+            const id = req.user._id as string
+
+            if (!id) throw NotFound()
+
             const data = await deleteUser({ id })
 
             res.done({ data, code: 204 })
@@ -112,7 +116,10 @@ function deleteUserHandler(options): RequestHandler {
 function updateUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const { id } = req.params
+            const id = req.user._id as string
+
+            if (!id) throw NotFound()
+
             const data = await updateUser({ id, fields: req.body })
 
             res.done({ data })
@@ -140,18 +147,12 @@ function userController(options: { db: typeof mongoose }) {
     router.post('/login', validator(loginUserSchema), loginUserHandler(options))
 
     /** DELETE */
-    router.delete(
-        '/:id',
-        authMiddleware(),
-        validObjectId(),
-        deleteUserHandler(options),
-    )
+    router.delete('/', authMiddleware(), deleteUserHandler(options))
 
     /** PUT */
     router.put(
-        '/:id',
+        '/',
         authMiddleware(),
-        validObjectId(),
         validator(updateUserSchema),
         updateUserHandler(options),
     )

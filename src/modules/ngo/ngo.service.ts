@@ -66,7 +66,7 @@ async function getAllNGOsIncludeDeleted(query: Record<string, any>) {
 }
 
 /** Get single record by id */
-async function getNGO({ id }: { id: string }) {
+async function getNGO({ id }: { readonly id: string }) {
     try {
         const existingNGO = await NgoModel.findOne(
             {
@@ -116,7 +116,7 @@ async function createNGO({ fields }: { fields: Record<string, any> }) {
 }
 
 /** Delete one record */
-async function deleteNGO({ id }: { id: string }) {
+async function deleteNGO({ id }: { readonly id: string }) {
     try {
         const existingNGO = await NgoModel.findOne({
             $and: [
@@ -157,7 +157,7 @@ async function updateNGO({
     id,
     fields,
 }: {
-    id: string
+    readonly id: string
     fields: Record<string, any>
 }) {
     try {
@@ -180,6 +180,11 @@ async function updateNGO({
         if (fields?.address) {
             existing.address = fields.address
             existing.markModified('address')
+        }
+
+        if (fields?.verifiedAt) {
+            existing.verifiedAt = fields.verifiedAt
+            existing.markModified('verifiedAt')
         }
 
         await existing.save()

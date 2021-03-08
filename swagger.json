@@ -156,6 +156,28 @@
         "tags": [
           "users"
         ]
+      },
+      "delete": {
+        "summary": "/users",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "users"
+        ]
+      },
+      "put": {
+        "summary": "/users",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "users"
+        ]
       }
     },
     "/users/raw": {
@@ -173,40 +195,6 @@
     },
     "/users/{id}": {
       "get": {
-        "summary": "/users/{id}",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {},
-        "tags": [
-          "users"
-        ]
-      },
-      "delete": {
-        "summary": "/users/{id}",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {},
-        "tags": [
-          "users"
-        ]
-      },
-      "put": {
         "summary": "/users/{id}",
         "consumes": [
           "application/json"
@@ -311,6 +299,25 @@
       },
       "put": {
         "summary": "/ngos/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "ngo"
+        ]
+      }
+    },
+    "/ngos/{id}/verify": {
+      "put": {
+        "summary": "/ngos/{id}/verify",
         "consumes": [
           "application/json"
         ],
@@ -448,6 +455,10 @@
         },
         "area": {
           "type": "string"
+        },
+        "verifiedAt": {
+          "type": "string",
+          "format": "date-time"
         },
         "deletedAt": {
           "type": "string",

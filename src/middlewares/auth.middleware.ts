@@ -2,10 +2,17 @@ import { NextFunction, Response, Request, RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 
 import ApiException, { NotFound, Unauthorized } from '../exceptions/ApiException'
+import { User } from '../modules/users/user.model'
 
 const secret = process.env.JWT_SECRET ?? 'JWT_SECRET'
 
-const authMiddleware = (): RequestHandler => {
+const authMiddleware = (
+    {
+        role,
+    }: {
+        role: RoleType | undefined
+    } = { role: undefined },
+): RequestHandler => {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
             /** Check Authorization token present */
@@ -16,15 +23,29 @@ const authMiddleware = (): RequestHandler => {
             if (scheme !== 'Bearer' || !token) throw Unauthorized()
 
             /** verify async-ly */
-            jwt.verify(token, secret, {}, (err, user) => {
-                if (err) throw Unauthorized()
+            jwt.verify(
+                token,
+                secret,
+                {},
+                (err, user: Partial<User> | undefined) => {
+                    /** check error'd  || check is role is required */
+                    if (err) throw Unauthorized()
 
-                /** make this available to next routes */
-                // @ts-ignore
-                req.user = user
+                    if (
+                        role &&
+                        user &&
+                        user?.roles?.length &&
+                        !user?.roles?.includes(role.toUpperCase())
+                    )
+                        throw Unauthorized()
 
-                return next()
-            })
+                    /** make this available to next routes */
+                    // @ts-ignore
+                    req.user = user
+
+                    return next()
+                },
+            )
         } catch (e) {
             return next(e)
         }

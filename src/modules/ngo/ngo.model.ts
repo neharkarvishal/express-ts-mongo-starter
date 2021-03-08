@@ -10,7 +10,7 @@ export interface NGODocument extends Document {
     phoneNumber: string
     alternatePhoneNumber?: string
     area?: Record<string, any>
-
+    verifiedAt: Date | null
     deletedAt: Date | null
 }
 
@@ -49,6 +49,10 @@ export const NGOSchema = new Schema(
                 type: [[[Number]]], // Array of arrays of arrays of coordinate numbers
                 required: true,
             },
+        },
+        verifiedAt: {
+            type: Date,
+            default: null,
         },
         deletedAt: {
             type: Date,

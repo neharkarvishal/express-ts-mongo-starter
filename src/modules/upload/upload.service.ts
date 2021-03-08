@@ -14,7 +14,7 @@ const projection = {
 }
 
 /** Get single record by id */
-async function getUpload({ id }: { id: string }) {
+async function getUpload({ id }: { readonly id: string }) {
     try {
         const existing = await UploadModel.find(
             {
@@ -46,7 +46,7 @@ async function updateUpload({
     id,
     fields,
 }: {
-    id: string
+    readonly id: string
     fields: Record<string, any>
 }) {
     try {

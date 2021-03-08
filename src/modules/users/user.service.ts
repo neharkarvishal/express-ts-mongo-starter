@@ -49,7 +49,7 @@ async function getAllUsersIncludeDeleted(query: Record<string, any>) {
 }
 
 /** Get single record by id */
-async function getUser({ id }: { id: string }) {
+async function getUser({ id }: { readonly id: string }) {
     try {
         const existingUser = await UserModel.findOne(
             {
@@ -145,7 +145,7 @@ async function loginUser({ fields }: { fields: Record<string, string> }) {
 }
 
 /** Delete one record */
-async function deleteUser({ id }: { id: string }) {
+async function deleteUser({ id }: { readonly id: string }) {
     try {
         const existingUser = await UserModel.findOne({
             $and: [
@@ -187,7 +187,7 @@ async function updateUser({
     id,
     fields,
 }: {
-    id: string
+    readonly id: string
     fields: Record<string, any>
 }) {
     try {

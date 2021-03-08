@@ -1,3 +1,5 @@
+type RoleType = 'ADMIN' | 'NGO_ADMIN' | 'NGO_FO' | 'VOLUNTEER' | 'USER'
+
 declare namespace Express {
     interface Request {
         user: Record<string, unknown>
