@@ -180,6 +180,19 @@
         ]
       }
     },
+    "/users/me": {
+      "get": {
+        "summary": "/users/me",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/users/raw": {
       "get": {
         "summary": "/users/raw",

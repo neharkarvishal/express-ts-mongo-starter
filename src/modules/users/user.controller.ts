@@ -70,6 +70,20 @@ function getUserHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
+function getMeHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const id = req.user._id as string
+            const data = await getUser({ id })
+
+            res.done({ code: 200, data })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
+/** RequestHandler */
 function createUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
@@ -133,6 +147,9 @@ function updateUserHandler(options): RequestHandler {
 function userController(options: { db: typeof mongoose }) {
     /** GET */
     router.get('/', authMiddleware(), getAllUsersHandler(options))
+
+    /** GET */
+    router.get('/me', authMiddleware(), getMeHandler(options))
 
     /** GET */
     router.get('/raw', authMiddleware(), getAllUsersIncludeDeletedHandler(options))
