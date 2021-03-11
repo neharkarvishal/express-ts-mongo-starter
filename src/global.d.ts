@@ -31,7 +31,7 @@ type UploadFileType = {
 
 declare namespace Express {
     interface Request {
-        user: Record<string, unknown>
+        user: Record<string, unknown> & { _id: string }
         file?: Partial<UploadFileType>
     }
 

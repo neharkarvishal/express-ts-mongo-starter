@@ -130,7 +130,7 @@ async function createCase({ fields }: { fields: Record<string, any> }) {
             ...data
         } = savedCase.toObject()
 
-        return data as CaseInterface
+        return data
     } catch (error) {
         logger.error(`Case create failed`, logCases)
         return Promise.reject(error)
@@ -167,7 +167,7 @@ async function deleteCase({ id }: { readonly id: string }) {
             ...data
         } = existingCase.toObject()
 
-        return data as CaseInterface
+        return data
     } catch (error) {
         logger.error(`Case delete failed ${id}`, logCases)
         return Promise.reject(error)

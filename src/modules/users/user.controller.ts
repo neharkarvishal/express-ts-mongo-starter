@@ -73,7 +73,10 @@ function getUserHandler(options): RequestHandler {
 function getMeHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const id = req.user._id as string
+            const id = req.user._id
+
+            if (!id) throw NotFound()
+
             const data = await getUser({ id })
 
             res.done({ code: 200, data })
@@ -113,7 +116,7 @@ function loginUserHandler(options): RequestHandler {
 function deleteUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const id = req.user._id as string
+            const id = req.user._id
 
             if (!id) throw NotFound()
 
@@ -130,7 +133,7 @@ function deleteUserHandler(options): RequestHandler {
 function updateUserHandler(options): RequestHandler {
     return async (req, res, next) => {
         try {
-            const id = req.user._id as string
+            const id = req.user._id
 
             if (!id) throw NotFound()
 
