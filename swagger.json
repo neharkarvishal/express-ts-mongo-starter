@@ -33,9 +33,9 @@
         "tags": []
       }
     },
-    "/upload": {
+    "/upload/avatar": {
       "post": {
-        "summary": "/upload",
+        "summary": "/upload/avatar",
         "consumes": [
           "application/json"
         ],
@@ -481,7 +481,8 @@
       "title": "Upload",
       "required": [
         "type",
-        "url"
+        "fileName",
+        "addedBy"
       ],
       "properties": {
         "type": {
@@ -494,6 +495,10 @@
           ]
         },
         "url": {
+          "type": "string",
+          "required": false
+        },
+        "fileName": {
           "type": "string"
         },
         "title": {
@@ -509,8 +514,7 @@
           "required": false
         },
         "addedBy": {
-          "type": "string",
-          "required": false
+          "type": "string"
         },
         "referer": {
           "type": "string"

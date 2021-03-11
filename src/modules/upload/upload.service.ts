@@ -1,10 +1,12 @@
-import fs from 'fs'
-
+/* eslint-disable no-nested-ternary */
 import { NotFound } from '../../exceptions/ApiException'
 import { logger } from '../../utils/logger'
+import CaseModel from '../case/case.model'
+import NgoModel, { NGOCollectionName } from '../ngo/ngo.model'
+import UserModel, { UserCollectionName } from '../users/user.model'
 import UploadModel from './upload.model'
 
-const logCases = { tags: ['BACKEND', 'CASE-HISTORY-SERVICE'] }
+const logUploads = { tags: ['BACKEND', 'UPLOAD-SERVICE'] }
 const projection = {
     __v: 0,
     // createdAt: 0,
@@ -32,11 +34,58 @@ async function getUpload({ id }: { readonly id: string }) {
 }
 
 /** Create one record */
-async function createUpload({ fields }: { fields: Record<string, any> }) {
+async function avatarUpload({
+    body = {},
+    file = {},
+    user = {},
+}: {
+    body: Record<string, any>
+    file: Partial<UploadFileType>
+    user: Record<string, any>
+}) {
     try {
-        return []
+        const fields = {
+            fileName: file?.filename ?? body?.title ?? '',
+            title: body?.title ?? file?.filename ?? '',
+            addedBy: user?._id ?? null,
+            size: file?.size ?? 0,
+            type: 'IMAGE',
+            referer: {
+                type: UserCollectionName.toUpperCase(),
+                object: user?._id ?? null,
+            },
+        }
+
+        const uploadFile = new UploadModel(fields)
+        await uploadFile.save()
+        const savedNGO = await uploadFile.save()
+
+        await savedNGO
+            .populate({
+                path: 'addedBy',
+                model: UserModel,
+                select: projection,
+            })
+            .populate({
+                path: 'referer.object',
+                model: UserModel,
+                select: projection,
+            })
+            .execPopulate()
+
+        logger.info(`Upload saved: ${savedNGO._id}`, logUploads)
+
+        const {
+            __v,
+            createdAt,
+            updatedAt,
+            deletedAt,
+            ...data
+        } = savedNGO.toObject()
+
+        return data
     } catch (e) {
-        logger.error(`Case create failed`, logCases)
+        logger.error(`Case create failed`, logUploads)
         return Promise.reject(e)
     }
 }
@@ -52,7 +101,7 @@ async function updateUpload({
     try {
         return []
     } catch (e) {
-        logger.error(`Case update failed`, logCases)
+        logger.error(`Case update failed`, logUploads)
         return Promise.reject(e)
     }
 }
@@ -61,7 +110,7 @@ async function updateUpload({
 function uploadService() {
     return {
         getUpload,
-        createUpload,
+        avatarUpload,
         updateUpload,
     }
 }

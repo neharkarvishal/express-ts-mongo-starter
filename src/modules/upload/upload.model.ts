@@ -4,6 +4,16 @@ export const UploadCollectionName = 'Upload' as const
 
 export interface UploadDocument extends Document {
     _id: string
+    type: string
+    url: string
+    title: string
+    size: number
+    sizeHuman: string
+    addedBy: string
+    referer: {
+        type: string
+        object: string | Object | any
+    }
 }
 
 export const UploadSchema = new Schema(
@@ -17,7 +27,13 @@ export const UploadSchema = new Schema(
         },
         url: {
             type: String,
+            required: false,
+        },
+        fileName: {
+            type: String,
             required: true,
+            trim: true,
+            lowercase: true,
         },
         title: {
             type: String,
@@ -36,12 +52,12 @@ export const UploadSchema = new Schema(
         addedBy: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: false,
+            required: true,
         },
         referer: {
             type: {
                 type: String,
-                enum: ['CASE'],
+                enum: ['CASE', 'USER', 'NGO'],
             },
             object: Schema.Types.ObjectId,
         },

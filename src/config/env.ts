@@ -2,8 +2,13 @@ import 'dotenv/config'
 import './miscSetup'
 
 import { cleanEnv, host, num, port, str } from 'envalid'
+import fs from 'fs'
 
 require('express-async-errors')
+
+// upload dir
+export const uploadDir = `${__dirname}/../../uploads`
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir)
 
 const validateEnv = () => {
     cleanEnv(process.env, {
