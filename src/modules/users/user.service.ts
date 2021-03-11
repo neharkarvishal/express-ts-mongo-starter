@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import { Forbidden, NotFound } from '../../exceptions/ApiException'
 import { logger } from '../../utils/logger'
+import NgoModel from '../ngo/ngo.model'
 import UserModel from './user.model'
 
 const secret = process.env.JWT_SECRET ?? 'JWT_SECRET'
@@ -51,7 +52,7 @@ async function getAllUsersIncludeDeleted(query: Record<string, any>) {
 /** Get single record by id */
 async function getUser({ id }: { readonly id: string }) {
     try {
-        const existingUser = await UserModel.findOne(
+        const user = await UserModel.findOne(
             {
                 $and: [
                     {
@@ -65,9 +66,13 @@ async function getUser({ id }: { readonly id: string }) {
             projection,
         ).exec()
 
-        if (!existingUser) throw NotFound({ caseId: 'User does not exist.' })
+        if (!user) throw NotFound({ caseId: 'User does not exist.' })
 
-        return existingUser
+        await user
+            .populate({ path: 'ngo', select: projection, model: NgoModel })
+            .execPopulate()
+
+        return user
     } catch (e) {
         return Promise.reject(e)
     }
