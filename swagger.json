@@ -134,6 +134,25 @@
         ]
       }
     },
+    "/cases/{id}/reschedule": {
+      "put": {
+        "summary": "/cases/{id}/reschedule",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "cases"
+        ]
+      }
+    },
     "/users": {
       "get": {
         "summary": "/users",
@@ -688,6 +707,36 @@
           "format": "date-time"
         },
         "deletedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "EmailValidation": {
+      "title": "EmailValidation",
+      "required": [
+        "email",
+        "token"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "verifiedAt": {
           "type": "string",
           "format": "date-time"
         },

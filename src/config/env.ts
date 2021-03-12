@@ -25,6 +25,8 @@ const validateEnv = () => {
         REDIS_PASSWORD: str(),
         REDIS_DB: num(),
         REDIS_PREFIX: str(),
+
+        SENDGRID_API_KEY: str(),
     })
 }
 

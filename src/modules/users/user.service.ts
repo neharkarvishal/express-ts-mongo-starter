@@ -1,10 +1,32 @@
+import sgMail from '@sendgrid/mail'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 
 import { Forbidden, NotFound } from '../../exceptions/ApiException'
+import EmailValidationModel from '../../shared/models/EmailValidationRequest'
 import { logger } from '../../utils/logger'
 import NgoModel from '../ngo/ngo.model'
 import UserModel from './user.model'
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
+
+const prepareValidationEmail = ({
+    from = 'vishal.n@petkonnect.com',
+    to = 'vishal.n@petkonnect.com',
+    subject = 'Email Verification',
+    text = 'email verification',
+    token,
+    html = `<center><strong><i>Token: ${token} </i></strong></center>`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
+}) => {
+    return {
+        from, // Change to your verified sender
+        to, // Change to your recipient
+        subject,
+        text,
+        html,
+    }
+}
 
 const secret = process.env.JWT_SECRET ?? 'JWT_SECRET'
 
@@ -90,6 +112,27 @@ async function createUser({ fields }: { fields: Record<string, any> }) {
         const savedUser = await newUser.save()
         logger.info(`User saved: ${savedUser._id}`, logUsers)
 
+        // after saving user, creating token for validation of email
+        const token = crypto.randomBytes(20).toString('hex') // sync
+
+        // saving in in database
+        const emailToken = new EmailValidationModel({
+            email: String(fields?.email),
+            token,
+        })
+        await emailToken.save()
+
+        // and sending it via sendgrid
+        /* await */ sgMail
+            .send(prepareValidationEmail({ token }))
+            .catch((error) => {
+                logger.error(
+                    `sgMail failed for User: ${savedUser._id} ${error}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
+                    logUsers,
+                )
+            })
+
+        // send res
         const {
             __v,
             createdAt,
@@ -101,7 +144,7 @@ async function createUser({ fields }: { fields: Record<string, any> }) {
 
         return data
     } catch (e) {
-        logger.error(`User create failed`, logUsers)
+        logger.error(`User create failed ${e}`, logUsers) // eslint-disable-line @typescript-eslint/restrict-template-expressions
         return Promise.reject(e)
     }
 }

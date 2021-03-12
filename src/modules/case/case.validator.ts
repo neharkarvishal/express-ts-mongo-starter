@@ -108,23 +108,23 @@ export const updateCaseSchema = Joi.object({
 
     animalDetails: Joi.object({
         type: Joi.string()
-            .required()
+            .optional()
             .valid('DOG', 'CAT', 'UNKNOWN')
             .label('Animal Type'),
 
-        name: Joi.string().min(2).max(38).required().label('Animal Name'),
+        name: Joi.string().min(2).max(38).optional().label('Animal Name'),
 
         image: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id')
-            .required()
+            .optional()
             .label('Media Image'),
 
-        color: Joi.string().min(2).max(38).required().label('Animal Color'),
+        color: Joi.string().min(2).max(38).optional().label('Animal Color'),
 
         identificationMark: Joi.string()
             .min(2)
             .max(60)
-            .required()
+            .optional()
             .label('Animal Identification Mark'),
     })
         .optional()

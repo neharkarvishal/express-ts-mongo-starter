@@ -148,7 +148,7 @@ function caseController(options: { db: typeof mongoose }) {
 
     /** PUT */
     router.put(
-        '/:id',
+        '/:id/reschedule',
         validObjectId(),
         validator(rescheduleCaseSchema),
         rescheduleCaseHandler(options),
