@@ -116,23 +116,19 @@ async function createUser({ fields }: { fields: Record<string, any> }) {
         const token = crypto.randomBytes(20).toString('hex') // sync
 
         // saving in in database
-        const emailToken = new EmailValidationModel({
+        await new EmailValidationModel({
             email: String(fields?.email),
             token,
-        })
-        await emailToken.save()
+        }).save()
 
         // and sending it via sendgrid
-        /* await */ sgMail
-            .send(prepareValidationEmail({ token }))
-            .catch((error) => {
-                logger.error(
-                    `sgMail failed for User: ${savedUser._id} ${error}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
-                    logUsers,
-                )
-            })
+        await sgMail.send(prepareValidationEmail({ token })).catch((error) =>
+            logger.error(
+                `sgMail failed for User: ${savedUser._id} ${error}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
+                logUsers,
+            ),
+        )
 
-        // send res
         const {
             __v,
             createdAt,

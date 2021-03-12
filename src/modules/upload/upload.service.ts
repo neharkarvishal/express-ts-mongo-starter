@@ -7,6 +7,7 @@ import UserModel, { UserCollectionName } from '../users/user.model'
 import UploadModel from './upload.model'
 
 const logUploads = { tags: ['BACKEND', 'UPLOAD-SERVICE'] }
+
 const projection = {
     __v: 0,
     // createdAt: 0,
