@@ -4,11 +4,12 @@ import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 
 import { Forbidden, NotFound } from '../../exceptions/ApiException'
-import EmailValidationModel from '../../shared/models/EmailValidationRequest'
+import UserValidationModel from '../../shared/models/UserValidationRequest'
 import { logger } from '../../utils/logger'
 import NgoModel from '../ngo/ngo.model'
 import UserModel from './user.model'
 
+// setup sgMail config
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
 
 const prepareValidationEmail = ({
@@ -32,7 +33,7 @@ const secret = process.env.JWT_SECRET ?? 'JWT_SECRET'
 
 const jwtOptions = { expiresIn: '24h' }
 
-const logUsers = { tags: ['BACKEND', 'CASE-SERVICE'] }
+const logUsers = { tags: ['BACKEND', 'USER-SERVICE'] }
 
 const projection = {
     __v: 0,
@@ -103,7 +104,15 @@ async function getUser({ id }: { readonly id: string }) {
 /** Create one record */
 async function createUser({ fields }: { fields: Record<string, any> }) {
     try {
-        if (fields?.roles && fields?.roles.length)
+        // default point set to mumbai
+        if (!fields?.point)
+            // eslint-disable-next-line no-param-reassign
+            fields.point = {
+                type: 'Point',
+                coordinates: [72.87, 19.07],
+            }
+
+        if (fields?.roles && fields?.roles?.length)
             fields.roles = [...new Set([...fields.roles])] // eslint-disable-line no-param-reassign
 
         fields.password = await bcrypt.hash(fields.password, 10) // eslint-disable-line no-param-reassign
@@ -116,9 +125,10 @@ async function createUser({ fields }: { fields: Record<string, any> }) {
         const token = crypto.randomBytes(20).toString('hex') // sync
 
         // saving in in database
-        await new EmailValidationModel({
+        await new UserValidationModel({
             email: String(fields?.email),
             token,
+            otp: Math.floor(1000 + Math.random() * 9000),
         }).save()
 
         // and sending it via sendgrid
@@ -289,6 +299,112 @@ async function updateUser({
     }
 }
 
+/** Update one record */
+async function verifyEmail({ token }: { readonly token: string }) {
+    try {
+        const emailValidation = await UserValidationModel.findOne({
+            $and: [
+                {
+                    token,
+                },
+                {
+                    verifiedAt: null,
+                },
+            ],
+        }).exec()
+
+        if (!emailValidation) throw NotFound({ token: 'Token does not exist.' })
+
+        const existingUser = await UserModel.findOne({
+            email: emailValidation.email,
+        }).exec()
+
+        if (!existingUser) throw NotFound({ token: 'User does not exist.' })
+
+        const now = new Date()
+
+        emailValidation.verifiedAt = now
+        emailValidation.markModified('verifiedAt')
+        await emailValidation.save()
+
+        existingUser.emailVerifiedAt = now
+        existingUser.markModified('emailVerifiedAt')
+        await existingUser.save()
+
+        logger.info(`User verified: ${existingUser._id}`, logUsers)
+
+        const {
+            __v,
+            createdAt,
+            updatedAt,
+            deletedAt,
+            password,
+            ...userData
+        } = existingUser.toObject()
+
+        const emailValidationData = emailValidation.toObject()
+
+        return { userData, emailValidationData }
+    } catch (e) {
+        logger.info(`User verification failed: ${token}`, logUsers)
+        return Promise.reject(e)
+    }
+}
+
+/** Update one record */
+async function verifyOtp({
+    otp,
+    phone,
+}: {
+    readonly otp: string
+    readonly phone: string
+}) {
+    try {
+        const existingUser = await UserModel.findOne({
+            phoneNumber: phone,
+        }).exec()
+
+        if (!existingUser) throw NotFound({ token: 'User does not exist.' })
+
+        const validation = await UserValidationModel.findOne({
+            email: existingUser.email,
+        }).exec()
+
+        if (!validation) throw NotFound({ otp: 'Does not exist.' })
+
+        if (String(validation.otp) !== String(otp))
+            throw NotFound({ otp: 'Does invalid.' })
+
+        const now = new Date()
+
+        validation.verifiedAt = now
+        validation.markModified('verifiedAt')
+        await validation.save()
+
+        existingUser.emailVerifiedAt = now
+        existingUser.markModified('emailVerifiedAt')
+        await existingUser.save()
+
+        logger.info(`User verified: ${existingUser._id}`, logUsers)
+
+        const {
+            __v,
+            createdAt,
+            updatedAt,
+            deletedAt,
+            password,
+            ...userData
+        } = existingUser.toObject()
+
+        const emailValidationData = validation.toObject()
+
+        return { userData, emailValidationData }
+    } catch (e) {
+        logger.info(`User verification failed: ${otp} ${phone}`, logUsers)
+        return Promise.reject(e)
+    }
+}
+
 /** Service */
 function userService() {
     return {
@@ -299,6 +415,8 @@ function userService() {
         updateUser,
         getAllUsersIncludeDeleted,
         loginUser,
+        verifyEmail,
+        verifyOtp,
     }
 }
 

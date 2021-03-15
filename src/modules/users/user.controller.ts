@@ -23,6 +23,8 @@ const {
     updateUser,
     getAllUsersIncludeDeleted,
     loginUser,
+    verifyEmail,
+    verifyOtp,
 } = userService()
 
 const router = express.Router()
@@ -146,6 +148,40 @@ function updateUserHandler(options): RequestHandler {
     }
 }
 
+/** RequestHandler */
+function verifyEmailUserHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const { token } = req.params
+
+            if (!token) throw NotFound()
+
+            const data = await verifyEmail({ token })
+
+            res.done({ data })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
+/** RequestHandler */
+function verifyOtpUserHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const { otp, phone } = req.params
+
+            if (!otp) throw NotFound()
+
+            const data = await verifyOtp({ otp, phone })
+
+            res.done({ data })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
 /** User Controller */
 function userController(options: { db: typeof mongoose }) {
     /** GET */
@@ -176,6 +212,12 @@ function userController(options: { db: typeof mongoose }) {
         validator(updateUserSchema),
         updateUserHandler(options),
     )
+
+    /** PUT */
+    router.put('/verify/email/:token', verifyEmailUserHandler(options))
+
+    /** PUT */
+    router.put('/verify/otp/:otp', verifyOtpUserHandler(options))
 
     return router
 }

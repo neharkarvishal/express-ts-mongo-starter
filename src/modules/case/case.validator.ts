@@ -180,7 +180,7 @@ export const updateCaseSchema = Joi.object({
     scheduled: Joi.date().iso().optional(),
 
     history: Joi.array()
-        .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id'))
+        // .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'valid mongo id'))
         .optional(),
 }).label('Cases validation schema')
 

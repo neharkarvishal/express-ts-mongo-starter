@@ -94,9 +94,115 @@
             "required": true
           }
         ],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "animalDetails": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "CAT"
+                        }
+                      }
+                    },
+                    "point": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Point"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "example": [
+                            -120.24
+                          ]
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OPEN"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "INJURY"
+                    },
+                    "history": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string"
+                          },
+                          "case": {
+                            "type": "string"
+                          },
+                          "assignedTo": {
+                            "type": "null"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_id",
+                          "case",
+                          "assignedTo",
+                          "description"
+                        ]
+                      },
+                      "example": [
+                        {
+                          "_id": "6034e76c4d714f2508f377fa",
+                          "case": "602e4162bca8802808e24a7e",
+                          "assignedTo": null,
+                          "description": "description"
+                        }
+                      ]
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "602e4162bca8802808e24a7e"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "example": "9890909090"
+                    },
+                    "scheduled": {
+                      "type": "string",
+                      "example": "2021-03-12T10:18:29.170Z"
+                    }
+                  }
+                },
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "OK"
+                }
+              }
+            }
+          }
+        },
         "tags": [
           "cases"
+        ],
+        "produces": [
+          "application/json"
         ]
       },
       "delete": {
@@ -128,9 +234,42 @@
             "required": true
           }
         ],
-        "responses": {},
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Bad Request"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 400
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "_id is not allowed"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "id is not allowed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "tags": [
           "cases"
+        ],
+        "produces": [
+          "application/json"
         ]
       }
     },
@@ -251,6 +390,44 @@
           "application/json"
         ],
         "parameters": [],
+        "responses": {},
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/verify/email/{token}": {
+      "put": {
+        "summary": "/users/verify/email/{token}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/verify/otp/{otp}": {
+      "put": {
+        "summary": "/users/verify/otp/{otp}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "otp",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": {},
         "tags": [
           "users"
@@ -723,17 +900,21 @@
         }
       }
     },
-    "EmailValidation": {
-      "title": "EmailValidation",
+    "UserValidation": {
+      "title": "UserValidation",
       "required": [
         "email",
-        "token"
+        "token",
+        "otp"
       ],
       "properties": {
         "email": {
           "type": "string"
         },
         "token": {
+          "type": "string"
+        },
+        "otp": {
           "type": "string"
         },
         "verifiedAt": {

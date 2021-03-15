@@ -1,14 +1,16 @@
 import { Document, model, Schema } from 'mongoose'
 
-export const EmailValidationCollectionName = 'EmailValidation' as const
+export const UserValidationCollectionName = 'UserValidation' as const
 
-export interface EmailValidationDocument extends Document {
+export interface UserValidationDocument extends Document {
     _id: string
     email: string
     token: string
+    otp: string
+    verifiedAt: Date | null
 }
 
-export const EmailValidationSchema = new Schema(
+export const UserValidationSchema = new Schema(
     {
         email: {
             type: String,
@@ -18,6 +20,10 @@ export const EmailValidationSchema = new Schema(
             index: true,
         },
         token: {
+            type: String,
+            required: true,
+        },
+        otp: {
             type: String,
             required: true,
         },
@@ -32,9 +38,9 @@ export const EmailValidationSchema = new Schema(
     },
 )
 
-const EmailValidationModel = model<EmailValidationDocument>(
-    EmailValidationCollectionName,
-    EmailValidationSchema,
+const UserValidationModel = model<UserValidationDocument>(
+    UserValidationCollectionName,
+    UserValidationSchema,
 )
 
-export default EmailValidationModel
+export default UserValidationModel
