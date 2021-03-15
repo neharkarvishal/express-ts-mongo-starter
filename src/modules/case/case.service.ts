@@ -5,7 +5,6 @@ import NgoModel from '../ngo/ngo.model'
 import ngoService from '../ngo/ngo.service'
 import MediaModel from '../upload/upload.model'
 import UserModel from '../users/user.model'
-import { CaseInterface } from './case.interface'
 import CaseModel from './case.model'
 
 const logCases = { tags: ['BACKEND', 'CASE-SERVICE'] }
