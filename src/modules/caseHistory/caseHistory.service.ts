@@ -68,7 +68,7 @@ async function createCaseHistory({ fields }: { fields: Record<string, any> }) {
         logger.info(`Case saved: ${savedCase._id}`, logCases)
 
         const {
-            __v,
+            __v, // @ts-ignore
             createdAt,
             // updatedAt,
             // deletedAt,
@@ -134,7 +134,7 @@ async function updateCaseHistory({
         logger.info(`Case updated: ${savedCase._id}`, logCases)
 
         const {
-            __v,
+            __v, // @ts-ignore
             createdAt,
             // updatedAt,
             // deletedAt,

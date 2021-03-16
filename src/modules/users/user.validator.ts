@@ -13,7 +13,11 @@ export const createUserSchema = Joi.object({
 
     password: Joi.string().required().min(8).max(360).label('Password'),
 
-    name: Joi.string().optional().min(2).max(360).label('Name'),
+    firstName: Joi.string().optional().min(2).max(360).label('First Name'),
+
+    lastName: Joi.string().optional().min(2).max(360).label('Last Name'),
+
+    occupation: Joi.string().optional().min(2).max(360).label('Name'),
 
     ngo: Joi.string()
         .optional()
@@ -119,3 +123,12 @@ export const updateUserSchema = Joi.object({
         .optional()
         .description('Please use this format [ longitude, latitude]'),
 }).label('Users validation schema')
+
+// @ts-ignore
+export type LoginUserFields = Joi.extractType<typeof loginUserSchema>
+
+// @ts-ignore
+export type CreateUserFields = Joi.extractType<typeof createUserSchema>
+
+// @ts-ignore
+export type UpdateUserFields = Joi.extractType<typeof updateUserSchema>

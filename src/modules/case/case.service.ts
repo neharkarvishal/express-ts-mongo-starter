@@ -6,6 +6,11 @@ import ngoService from '../ngo/ngo.service'
 import MediaModel from '../upload/upload.model'
 import UserModel from '../users/user.model'
 import CaseModel from './case.model'
+import {
+    CreateCaseFields,
+    RescheduleCaseFields,
+    UpdateCaseFields,
+} from './case.validator'
 
 const logCases = { tags: ['BACKEND', 'CASE-SERVICE'] }
 const projection = {
@@ -98,7 +103,7 @@ async function getCaseById({ id }: { readonly id: string }) {
 }
 
 /** Create one record */
-async function createCase({ fields }: { fields: Record<string, any> }) {
+async function createCase({ fields }: { fields: CreateCaseFields }) {
     try {
         const nearByNgos = await getAllNGOs({
             maxDistance: 99999999999999999999999999999999999, // kilometers, near by NOGs in this radius
@@ -122,7 +127,7 @@ async function createCase({ fields }: { fields: Record<string, any> }) {
         logger.info(`Case saved: ${savedCase._id}`, logCases)
 
         const {
-            __v,
+            __v, // @ts-ignore
             // createdAt,
             updatedAt,
             deletedAt,
@@ -159,7 +164,7 @@ async function deleteCase({ id }: { readonly id: string }) {
         logger.info(`Case deleted: ${existingCase._id}`, logCases)
 
         const {
-            __v,
+            __v, // @ts-ignore
             // createdAt,
             updatedAt,
             deletedAt,
@@ -179,7 +184,7 @@ async function updateCase({
     fields,
 }: {
     readonly id: string
-    fields: Record<string, any>
+    fields: UpdateCaseFields // | RescheduleCaseFields
 }) {
     try {
         const existing = await CaseModel.findOne({
@@ -224,7 +229,7 @@ async function updateCase({
         logger.info(`Case updated: ${existing._id}`, logCases)
 
         const {
-            __v,
+            __v, // @ts-ignore
             // createdAt,
             updatedAt,
             deletedAt,

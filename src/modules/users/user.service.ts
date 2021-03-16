@@ -8,6 +8,11 @@ import UserValidationModel from '../../shared/models/UserValidationRequest'
 import { logger } from '../../utils/logger'
 import NgoModel from '../ngo/ngo.model'
 import UserModel from './user.model'
+import {
+    CreateUserFields,
+    LoginUserFields,
+    UpdateUserFields,
+} from './user.validator'
 
 // setup sgMail config
 sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
@@ -102,7 +107,7 @@ async function getUser({ id }: { readonly id: string }) {
 }
 
 /** Create one record */
-async function createUser({ fields }: { fields: Record<string, any> }) {
+async function createUser({ fields }: { fields: CreateUserFields }) {
     try {
         // default point set to mumbai
         if (!fields?.point)
@@ -140,9 +145,9 @@ async function createUser({ fields }: { fields: Record<string, any> }) {
         )
 
         const {
-            __v,
-            createdAt,
-            updatedAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
+            updatedAt, // @ts-ignore
             deletedAt,
             password,
             ...data
@@ -156,7 +161,7 @@ async function createUser({ fields }: { fields: Record<string, any> }) {
 }
 
 /** Login */
-async function loginUser({ fields }: { fields: Record<string, string> }) {
+async function loginUser({ fields }: { fields: LoginUserFields }) {
     const { email = '', password = '' } = fields
 
     try {
@@ -181,9 +186,9 @@ async function loginUser({ fields }: { fields: Record<string, string> }) {
         if (!isPasswordMatching) throw Forbidden()
 
         const {
-            __v,
-            createdAt,
-            updatedAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
+            updatedAt, // @ts-ignore
             deletedAt,
             password: _,
             ...data
@@ -193,7 +198,7 @@ async function loginUser({ fields }: { fields: Record<string, string> }) {
 
         return { token, user: data }
     } catch (e) {
-        logger.error(`User login failed, ${email},`, logUsers)
+        logger.error(`User login failed, ${email},`, logUsers) // eslint-disable-line @typescript-eslint/restrict-template-expressions
         return Promise.reject(e)
     }
 }
@@ -221,7 +226,7 @@ async function deleteUser({ id }: { readonly id: string }) {
         logger.info(`User deleted: ${existingUser._id}`, logUsers)
 
         const {
-            __v,
+            __v, // @ts-ignore
             // createdAt,
             updatedAt,
             deletedAt,
@@ -242,7 +247,7 @@ async function updateUser({
     fields,
 }: {
     readonly id: string
-    fields: Record<string, any>
+    fields: UpdateUserFields
 }) {
     try {
         const existing = await UserModel.findOne({
@@ -281,12 +286,32 @@ async function updateUser({
             existing.markModified('point')
         }
 
+        if (fields?.firstName) {
+            existing.firstName = fields.firstName
+            existing.markModified('firstName')
+        }
+
+        if (fields?.lastName) {
+            existing.lastName = fields.lastName
+            existing.markModified('lastName')
+        }
+
+        if (fields?.occupation) {
+            existing.occupation = fields.occupation
+            existing.markModified('occupation')
+        }
+
+        if (fields?.dob) {
+            existing.dob = fields.dob
+            existing.markModified('dob')
+        }
+
         await existing.save()
         logger.info(`User updated: ${existing._id}`, logUsers)
 
         const {
-            __v,
-            createdAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
             updatedAt,
             deletedAt,
             password,
@@ -334,8 +359,8 @@ async function verifyEmail({ token }: { readonly token: string }) {
         logger.info(`User verified: ${existingUser._id}`, logUsers)
 
         const {
-            __v,
-            createdAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
             updatedAt,
             deletedAt,
             password,
@@ -388,8 +413,8 @@ async function verifyOtp({
         logger.info(`User verified: ${existingUser._id}`, logUsers)
 
         const {
-            __v,
-            createdAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
             updatedAt,
             deletedAt,
             password,

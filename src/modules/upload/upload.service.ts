@@ -41,7 +41,7 @@ async function avatarUpload({
     user = {},
 }: {
     body: Record<string, any>
-    file: Partial<UploadFileType>
+    file: Partial<UploadFileType> | undefined
     user: Record<string, any>
 }) {
     try {
@@ -77,9 +77,9 @@ async function avatarUpload({
         logger.info(`Upload saved: ${savedNGO._id}`, logUploads)
 
         const {
-            __v,
-            createdAt,
-            updatedAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
+            updatedAt, // @ts-ignore
             deletedAt,
             ...data
         } = savedNGO.toObject()

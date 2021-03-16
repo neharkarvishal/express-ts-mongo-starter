@@ -9,11 +9,14 @@ export interface User extends Document {
     _id: string
     email: string
     password: string
-    name?: string
+    firstName?: string
+    lastName?: string
     emailVerifiedAt: Date
     status?: string
     roles: string[]
     ngo: string
+    occupation?: string
+    dob: Date | null
     phoneNumber: string
     alternatePhoneNumber?: string
     point: Record<string, any>
@@ -33,7 +36,13 @@ export const UserSchema = new Schema(
             type: String,
             required: true,
         },
-        name: {
+        firstName: {
+            type: String,
+            required: false,
+            trim: true,
+            lowercase: true,
+        },
+        lastName: {
             type: String,
             required: false,
             trim: true,
@@ -74,6 +83,14 @@ export const UserSchema = new Schema(
         },
         phoneNumber: { type: String, required: false },
         alternatePhoneNumber: { type: String, required: false },
+        occupation: {
+            type: String,
+            required: false,
+        },
+        dob: {
+            type: Date,
+            default: null,
+        },
         deletedAt: {
             type: Date,
             default: null,

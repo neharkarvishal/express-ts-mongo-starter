@@ -101,8 +101,8 @@ async function createNGO({ fields }: { fields: Record<string, any> }) {
         logger.info(`NGO saved: ${savedNGO._id}`, logNGOs)
 
         const {
-            __v,
-            createdAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
             updatedAt,
             deletedAt,
             ...data
@@ -138,8 +138,8 @@ async function deleteNGO({ id }: { readonly id: string }) {
         logger.info(`NGO deleted: ${existingNGO._id}`, logNGOs)
 
         const {
-            __v,
-            createdAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
             updatedAt,
             deletedAt,
             ...data
@@ -191,8 +191,8 @@ async function updateNGO({
         logger.info(`NGO updated: ${existing._id}`, logNGOs)
 
         const {
-            __v,
-            createdAt,
+            __v, // @ts-ignore
+            createdAt, // @ts-ignore
             updatedAt,
             deletedAt,
             ...data

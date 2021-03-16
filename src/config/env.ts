@@ -3,6 +3,10 @@ import './miscSetup'
 
 import { cleanEnv, host, num, port, str } from 'envalid'
 import fs from 'fs'
+// noinspection ES6UnusedImports
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Joi from 'joi'
+import 'joi-extract-type'
 
 require('express-async-errors')
 

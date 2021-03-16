@@ -188,3 +188,12 @@ export const updateCaseSchema = Joi.object({
 export const rescheduleCaseSchema = Joi.object({
     scheduled: Joi.date().iso().required(),
 }).label('Cases validation schema')
+
+// @ts-ignore
+export type CreateCaseFields = Joi.extractType<typeof createCaseSchema>
+
+// @ts-ignore
+export type UpdateCaseFields = Joi.extractType<typeof updateCaseSchema>
+
+// @ts-ignore
+export type RescheduleCaseFields = Joi.extractType<typeof rescheduleCaseSchema>
