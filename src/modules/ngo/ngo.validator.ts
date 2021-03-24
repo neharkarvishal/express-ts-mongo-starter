@@ -9,7 +9,7 @@ export const createNGOSchema = Joi.object({
     phoneNumber: Joi.string()
         .length(10)
         .pattern(/^[0-9]+$/)
-        .optional()
+        .required()
         .label('Phone Number'),
 
     alternatePhoneNumber: Joi.string()
@@ -57,7 +57,7 @@ export const createNGOSchema = Joi.object({
             )
             .label('coordinates-layer-0'),
     })
-        .required()
+        .optional()
         .label('area'),
 }).label('NGOs validation schema')
 

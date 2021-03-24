@@ -12,10 +12,17 @@ export default class ApiException extends Error {
     stack?: any
 
     constructor({ message, status = 500, errors }: HttpExceptionParams) {
-        super(message)
-        this.status = status
+        super(message) // 'Error' breaks prototype chain here
 
+        this.status = status
         if (errors && Object.keys(errors).length) this.errors = errors
+        Object.setPrototypeOf(this, new.target.prototype) // restore prototype chain
+
+        if (typeof Error.captureStackTrace === 'function') {
+            Error.captureStackTrace(this, this.constructor)
+        } else {
+            this.stack = new Error(message).stack
+        }
     }
 }
 
